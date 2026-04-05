@@ -10,10 +10,41 @@ Sistema de versionado: semver (`MAJOR.MINOR.PATCH`).
 
 ## [Unreleased]
 
-### Pendiente de migrar
-- Crear `reference/react/CTASection.tsx` para stack React (cuando se migre la app React)
-- Añadir screenshots archivados de Anduril, Saronic, Mach a `design/references/`
-- Evaluar añadir `tokens/colors.json` en formato DTCG si se integra con Style Dictionary o Figma MCP
+### Pendientes de baja prioridad (deuda técnica conocida)
+
+Ninguno bloquea el uso del sistema en producción. Atacar cuando haya fricción real.
+
+**Tokens y fixes cosméticos (ex-Ola 3 del proyecto origen):**
+- Tokenizar los rgba blancos convencionales (`rgba(255,255,255,X)`) como tokens semánticos (`--text-on-dark-*`, `--border-on-dark-*`). Hoy viven como convención en `design/tokens.md §1.4` pero siguen hardcodeados en componentes.
+- Reemplazar adjetivos subjetivos en `DESIGN.md §1` ("restraint extremo", "jerarquía brutal", "espacio negativo generoso") por los valores numéricos equivalentes que ya existen más abajo en el mismo doc. Es una contradicción filosófica del documento consigo mismo.
+- Añadir alias explícito `--font-mono → --font-heading` en `tokens/typography.css` **ya resuelto en v0.1.0**.
+
+**Componentes pendientes:**
+- Crear `reference/react/CTASection.tsx` (o mejor: `reference/react/DashboardSection.tsx`) para stack React. El canónico actual (Astro) es de marketing/hero; las apps Kronos necesitan un canónico orientado a dashboards de trabajo. Nace del proyecto `lector-planos`.
+- Crear canónico de card (`reference/astro/Card.astro` o equivalente) para componentes de contenido editorial. El sistema hoy solo tiene la sección hero.
+- Migrar los 19 componentes legacy de `kronos-web` al lenguaje del sistema (Button, Header, Footer, ServiceCard, ProjectCard, ArticleCard, LogoCarousel, FeaturedProjectsCarousel, StatsBar, TechnicalCatalog, etc.). Trabajo iterativo, caso a caso.
+
+**Referencias visuales:**
+- Archivar screenshots de Anduril, Saronic y Mach en `design/references/*.png` antes de que rediseñen y pierdas el benchmark. Formato: `[empresa]-home-[YYYY-MM].png`.
+
+**Integraciones futuras:**
+- Evaluar añadir `tokens/colors.json` en formato DTCG (W3C 2025.10) si se integra con Style Dictionary o Figma MCP.
+- Pre-commit hook que ejecute `scripts/check-tokens.sh` automáticamente antes de cada commit del repo de diseño.
+- CI check de los repos consumidores que verifique que el submodule está sincronizado con una versión mínima del design system.
+
+---
+
+## [0.1.1] — 2026-04-05
+
+### Hardening y production readiness
+
+- **Repo pasa de privado a público.** Simplifica el CI/CD de todos los consumidores (Netlify, Vercel, Railway) sin comprometer secretos — el design system no contiene info sensible, solo tokens, docs, fonts y componentes de referencia.
+- **Nuevo smoke test `scripts/check-tokens.sh`.** Valida los 3 archivos `tokens/*.css` antes de commit: detecta comentarios con `/*/` (el bug que rompió Tailwind v4 en la Fase B de integración con `kronos-web`), balance de llaves, balance de paréntesis, balance de comentarios, convenciones de header. Ejecutar con `bash scripts/check-tokens.sh`.
+- **CHANGELOG expandido** con sección de deuda técnica honesta para futuros contribuyentes.
+
+### Fixes previos (post v0.1.0, pre v0.1.1)
+
+- `fix(tokens)` commit `a79a9ef`: escape `*/` inside comment of `tokens/colors.css` that was breaking CSS parsers. El comentario contenía `reference/*/CTASection` que cerraba el bloque de comentario prematuramente.
 
 ---
 
