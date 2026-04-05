@@ -1,0 +1,51 @@
+/* ============================================================
+   Kronos Mining — Design Tokens: Typography
+   ------------------------------------------------------------
+   Sistema tipográfico binario:
+     - Instrument Sans (sans principal, variable 100-900, stretch 75-100%)
+     - Geist Mono      (mono, variable 100-900, labels técnicas)
+
+   Documentación: design/typography.md
+   Anti-patterns: design/anti-patterns.md (NO terceras fuentes, NO serif)
+
+   Fonts self-hosted en este repo:
+     ../fonts/InstrumentSans-Variable.ttf
+     ../fonts/GeistMono-Variable.ttf
+
+   IMPORTANTE: los @font-face usan paths relativos. Cada repo
+   consumidor debe copiar los .ttf a su propia carpeta public/fonts/
+   (o equivalente) y ajustar las URLs antes de importar este archivo.
+   Ver scripts/install.sh o el README del design system.
+   ============================================================ */
+
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("/fonts/InstrumentSans-Variable.ttf") format("truetype");
+  font-weight: 100 900;
+  font-stretch: 75% 100%;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geist Mono";
+  src: url("/fonts/GeistMono-Variable.ttf") format("truetype");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@theme {
+  /* ----- Font Families ----- */
+  /* Sans: headlines, sub, body, botones. La familia principal del sistema. */
+  --font-sans: "Instrument Sans", system-ui, -apple-system, sans-serif;
+
+  /* Mono: labels técnicas (SISTEMA NN), coordenadas, footer técnico, metadata.
+     NOTA DE NAMING LEGACY: el token se llama --font-heading por razones históricas,
+     pero semánticamente es la fuente monoespaciada de labels técnicas, NO la de
+     headlines. Los headlines usan --font-sans. Mantener el nombre legacy evita
+     romper clases Tailwind `font-heading` existentes en repos consumidores. */
+  --font-heading: "Geist Mono", ui-monospace, monospace;
+
+  /* Alias semánticamente correcto — preferir este nombre en componentes nuevos.
+     Los repos consumidores pueden migrar de font-heading a font-mono gradualmente. */
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+}

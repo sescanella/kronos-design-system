@@ -1,0 +1,632 @@
+---
+// ============================================================
+// CTASection — COMPONENTE CANÓNICO DEL STACK ASTRO
+// Kronos Design System — reference/astro/CTASection.astro
+// ============================================================
+//
+// Este archivo es la FUENTE DE VERDAD visual del sistema Kronos
+// para proyectos Astro + Tailwind v4. Cualquier sección hero/CTA
+// de un repo consumidor debe replicar los patrones de este archivo:
+// tipografía, labels técnicas, botones, animaciones, layout.
+//
+// NO importar directamente desde este path — este repo vive como
+// git submodule en `.design-system/`. Los repos consumidores deben
+// COPIAR este archivo a su propio `src/components/` y adaptarlo al
+// contenido del proyecto (copy, links, datos), preservando el
+// lenguaje visual.
+//
+// Dependencias requeridas en el repo consumidor:
+//   npm install @paper-design/shaders gsap
+//
+// Tokens consumidos desde @theme:
+//   --color-primary, --color-primary-dark, --color-primary-light,
+//   --color-accent, --color-accent-light, --font-sans, --font-heading
+//
+// Patrones firmados implementados:
+//   A. Shader mesh gradient WebGL (Paper Shaders)
+//   B. GSAP SplitText + ScrollTrigger (text reveal)
+//   C. Shimmer sweep + glow pulse (botón primario)
+//   D. Liquid fill clip-path (botón outline)
+//
+// Degradación:
+//   - Shader desactivado en <768px y prefers-reduced-motion
+//   - GSAP cae a estado final en reduced-motion
+//   - Mobile: botones full-width, dividers ocultos, headline reducido
+//
+// Documentación:
+//   ../../DESIGN.md                    (router del sistema)
+//   ../../design/animations.md         (los 4 patrones)
+//   ../../design/anti-patterns.md      (reglas inviolables)
+// ============================================================
+---
+
+<section class="snap-section cta-wow relative overflow-hidden bg-primary-dark" aria-label="Contacto">
+  <!-- LAYER 1: Shader canvas (WebGL mesh gradient) -->
+  <div class="cta-shader-layer" data-cta-shader aria-hidden="true"></div>
+
+  <!-- LAYER 2: Overlay gradiente para legibilidad del texto -->
+  <div class="cta-overlay" aria-hidden="true"></div>
+
+  <!-- LAYER 3: Grid blueprint decorativo -->
+  <div class="cta-grid" aria-hidden="true"></div>
+
+  <!-- LAYER 4: Contenido -->
+  <div class="cta-content">
+    <div class="cta-inner">
+      <!-- Label técnica superior -->
+      <div class="cta-meta">
+        <span class="cta-tick" aria-hidden="true">◆</span>
+        <span class="cta-label">SISTEMA 05 — CONTACTO</span>
+        <div class="cta-divider" aria-hidden="true"></div>
+        <span class="cta-coord">-33.45°S / -70.66°W</span>
+      </div>
+
+      <!-- Headline oversized -->
+      <h2 class="cta-headline" data-cta-headline>
+        <span class="cta-line">Ingeniería que</span>
+        <span class="cta-line cta-line--accent">resiste.</span>
+      </h2>
+
+      <!-- Sub -->
+      <p class="cta-sub" data-cta-sub>
+        Diseñamos, fabricamos e instalamos sistemas certificados para la industria minera más exigente de Chile.
+      </p>
+
+      <!-- Botones -->
+      <div class="cta-actions" data-cta-actions>
+        <a href="/contacto#visitas" class="btn-kronos-primary">
+          <span class="btn-kronos-primary__label">AGENDAR VISITA</span>
+          <span class="btn-kronos-primary__arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/proyectos" class="btn-kronos-outline">
+          <span class="btn-kronos-outline__fill" aria-hidden="true"></span>
+          <span class="btn-kronos-outline__label">VER PROYECTOS</span>
+        </a>
+      </div>
+
+      <!-- Footer técnico -->
+      <div class="cta-footer">
+        <span>KRONOS MINING · SANTIAGO, CHILE</span>
+        <span class="cta-footer__dot" aria-hidden="true">●</span>
+        <span>ISO 9001 / 14001 / 45001</span>
+        <span class="cta-footer__dot" aria-hidden="true">●</span>
+        <span>EST. 2016</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ============================================================
+     CTASection — Anduril-style
+     ============================================================ */
+
+  .cta-wow {
+    display: flex;
+    flex-direction: column;
+    min-height: 100svh;
+  }
+
+  /* Layer 1: shader canvas container */
+  .cta-shader-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: var(--color-primary-dark);
+  }
+  .cta-shader-layer :global(canvas) {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+  }
+
+  /* Layer 2: overlay gradient para legibilidad
+     Usa color-mix() para derivar opacidades del token primary-dark.
+     Si cambias --color-primary-dark en global.css, el overlay se sincroniza automáticamente. */
+  .cta-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 90% 70% at 30% 50%, transparent 0%, color-mix(in srgb, var(--color-primary-dark) 55%, transparent) 70%),
+      linear-gradient(180deg, color-mix(in srgb, var(--color-primary-dark) 35%, transparent) 0%, color-mix(in srgb, var(--color-primary-dark) 82%, transparent) 100%);
+  }
+
+  /* Layer 3: grid blueprint */
+  .cta-grid {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    opacity: 0.04;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.8) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.8) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 90% 70% at center, black 40%, transparent 90%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 70% at center, black 40%, transparent 90%);
+  }
+
+  /* Layer 4: content */
+  .cta-content {
+    position: relative;
+    z-index: 20;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 4rem 1.5rem;
+  }
+  @media (min-width: 1024px) {
+    .cta-content {
+      padding: 4rem 3rem;
+    }
+  }
+  .cta-inner {
+    max-width: 80rem;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* Meta label superior (Anduril style) */
+  .cta-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  @media (min-width: 1024px) {
+    .cta-meta {
+      margin-bottom: 3rem;
+    }
+  }
+  .cta-tick {
+    color: var(--color-accent);
+    font-size: 10px;
+    line-height: 1;
+  }
+  .cta-label {
+    font-family: var(--font-heading, 'Geist Mono', ui-monospace, monospace);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    color: rgba(255, 255, 255, 0.85);
+    text-transform: uppercase;
+  }
+  .cta-divider {
+    flex: 0 0 60px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+  }
+  .cta-coord {
+    font-family: var(--font-heading, 'Geist Mono', ui-monospace, monospace);
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 0.08em;
+  }
+
+  /* Headline oversized */
+  /* Nota: #ffffff literal aceptado por ausencia de token --color-white en @theme.
+     Si se añade el token, migrar todas las ocurrencias rgba(255,255,255,x) y #ffffff. */
+  .cta-headline {
+    font-family: var(--font-sans, 'Instrument Sans', system-ui, sans-serif);
+    font-weight: 800;
+    font-size: clamp(3rem, 10vw, 8rem);
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    color: #ffffff;
+    margin: 0 0 clamp(1.5rem, 3vw, 2.5rem) 0;
+  }
+  .cta-line {
+    display: block;
+    overflow: hidden;
+  }
+  .cta-line--accent {
+    color: var(--color-accent);
+  }
+  /* Clase que GSAP SplitText genera para wrap de líneas */
+  :global(.cta-split-line) {
+    display: block;
+    overflow: hidden;
+  }
+
+  /* Sub */
+  .cta-sub {
+    font-family: var(--font-sans, 'Instrument Sans', system-ui, sans-serif);
+    font-size: clamp(1rem, 1.15vw, 1.25rem);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.6);
+    max-width: 52ch;
+    margin: 0 0 clamp(2rem, 4vw, 3rem) 0;
+  }
+
+  /* Actions */
+  .cta-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: clamp(3rem, 6vw, 5rem);
+  }
+
+  /* Footer técnico */
+  .cta-footer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-family: var(--font-heading, 'Geist Mono', ui-monospace, monospace);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    color: rgba(255, 255, 255, 0.3);
+    text-transform: uppercase;
+  }
+  .cta-footer__dot {
+    /* Alineado al token más cercano (--color-accent-light #FF7A33).
+       Diferencia visual imperceptible a 6px × 60% alpha. */
+    color: color-mix(in srgb, var(--color-accent-light) 60%, transparent);
+    font-size: 6px;
+  }
+
+  /* ============================================================
+     Botones
+     ============================================================ */
+
+  /* Botón primario: shimmer sweep + glow pulse */
+  .btn-kronos-primary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.125rem 2.25rem;
+    background: var(--color-accent);
+    color: #ffffff;
+    font-family: var(--font-sans, 'Instrument Sans', system-ui, sans-serif);
+    font-weight: 700;
+    font-size: 0.875rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 0.3s ease;
+    animation: cta-glow-pulse 3.5s ease-in-out infinite;
+  }
+  .btn-kronos-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      115deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.4) 50%,
+      transparent 70%
+    );
+    transform: translateX(-120%);
+    transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .btn-kronos-primary__label,
+  .btn-kronos-primary__arrow {
+    position: relative;
+    z-index: 2;
+  }
+  .btn-kronos-primary__arrow {
+    transition: transform 0.3s ease;
+    display: inline-block;
+  }
+  .btn-kronos-primary:hover {
+    transform: translateY(-2px);
+  }
+  .btn-kronos-primary:hover::before {
+    transform: translateX(120%);
+  }
+  .btn-kronos-primary:hover .btn-kronos-primary__arrow {
+    transform: translateX(4px);
+  }
+  .btn-kronos-primary:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 3px;
+  }
+
+  @keyframes cta-glow-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-accent) 0%, transparent);
+    }
+    50% {
+      box-shadow: 0 0 32px 4px color-mix(in srgb, var(--color-accent) 28%, transparent);
+    }
+  }
+
+  /* Botón outline: liquid fill con clip-path */
+  .btn-kronos-outline {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 1.125rem 2.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: #ffffff;
+    font-family: var(--font-sans, 'Instrument Sans', system-ui, sans-serif);
+    font-weight: 700;
+    font-size: 0.875rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+      border-color 0.3s ease,
+      color 0.55s ease;
+  }
+  .btn-kronos-outline__fill {
+    position: absolute;
+    inset: 0;
+    background: #ffffff;
+    clip-path: ellipse(120% 0% at 50% 100%);
+    transition: clip-path 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .btn-kronos-outline__label {
+    position: relative;
+    z-index: 2;
+  }
+  .btn-kronos-outline:hover {
+    color: var(--color-primary);
+    border-color: #ffffff;
+  }
+  .btn-kronos-outline:hover .btn-kronos-outline__fill {
+    clip-path: ellipse(140% 160% at 50% 100%);
+  }
+  .btn-kronos-outline:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  /* ============================================================
+     Responsive mobile
+     ============================================================ */
+  @media (max-width: 767px) {
+    .cta-headline {
+      font-size: clamp(2.5rem, 13vw, 4rem);
+    }
+    .cta-actions {
+      flex-direction: column;
+      width: 100%;
+    }
+    .cta-actions > a {
+      width: 100%;
+      justify-content: center;
+    }
+    .cta-footer {
+      font-size: 9px;
+      gap: 0.5rem;
+    }
+    .cta-divider {
+      display: none;
+    }
+    .cta-content {
+      padding: 3rem 1.5rem;
+    }
+  }
+
+  /* ============================================================
+     Reduced motion
+     ============================================================ */
+  @media (prefers-reduced-motion: reduce) {
+    /* Botones: desactivar animaciones y transiciones */
+    .btn-kronos-primary,
+    .btn-kronos-primary::before,
+    .btn-kronos-primary__arrow,
+    .btn-kronos-outline__fill {
+      animation: none !important;
+      transition: none !important;
+    }
+
+    /* Defensa contra JS fail: si gsap.set() ya escribió estado oculto
+       pero onEnter nunca corrió (GSAP no cargó, ScrollTrigger crashed,
+       race condition, etc.), forzamos estado legible. El !important es
+       necesario porque gsap.set() usa inline styles que ganan por
+       especificidad a cualquier CSS sin !important. */
+    .cta-headline,
+    .cta-headline .cta-line,
+    .cta-sub,
+    .cta-actions {
+      transform: none !important;
+      opacity: 1 !important;
+      filter: none !important;
+    }
+  }
+  /* cta-split-line es generada por GSAP SplitText en runtime — aplica fuera del scoped */
+  @media (prefers-reduced-motion: reduce) {
+    :global(.cta-split-line) {
+      transform: none !important;
+      opacity: 1 !important;
+      filter: none !important;
+    }
+  }
+</style>
+
+<script>
+  import {
+    ShaderMount,
+    meshGradientFragmentShader,
+    getShaderColorFromString,
+  } from '@paper-design/shaders';
+  import { gsap } from 'gsap';
+  import { SplitText } from 'gsap/SplitText';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(SplitText, ScrollTrigger);
+
+  let shaderInstance: any = null;
+  let splitInstance: any = null;
+  let scrollTriggers: any[] = [];
+
+  function initCTAShader() {
+    const container = document.querySelector<HTMLElement>('[data-cta-shader]');
+    if (!container || shaderInstance) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) return;
+
+    // Mobile: NO montar shader (performance + batería)
+    if (window.innerWidth < 768) return;
+
+    const section = container.closest('section');
+    if (!section) return;
+
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !shaderInstance) {
+            try {
+              // Hex literals en este bloque son la ÚNICA excepción legítima del archivo.
+              // Paper Shaders parsea strings a uniforms WebGL; CSS custom properties no se
+              // pueden resolver en runtime JS. Los valores espejan global.css @theme.
+              // Si cambias @theme, revisa manualmente estos hex.
+              shaderInstance = new ShaderMount(
+                container,
+                meshGradientFragmentShader,
+                {
+                  u_colors: [
+                    getShaderColorFromString('#052650'), // --color-primary-dark
+                    getShaderColorFromString('#083A75'), // --color-primary
+                    getShaderColorFromString('#0A4C95'), // --color-primary-light
+                    getShaderColorFromString('#FF5B00'), // --color-accent
+                  ],
+                  u_colorsCount: 4,
+                  u_distortion: 0.85,
+                  u_swirl: 0.25,
+                  u_grainMixer: 0.12,
+                  u_grainOverlay: 0.0,
+                },
+                undefined,
+                0.2
+              );
+              io.disconnect();
+            } catch (err) {
+              console.warn('[CTASection] Shader init failed, using fallback:', err);
+            }
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '200px 0px' }
+    );
+
+    io.observe(section);
+  }
+
+  function destroyCTAShader() {
+    if (shaderInstance && typeof shaderInstance.dispose === 'function') {
+      shaderInstance.dispose();
+    }
+    shaderInstance = null;
+  }
+
+  function initCTAAnimations() {
+    const headline = document.querySelector<HTMLElement>('[data-cta-headline]');
+    const sub = document.querySelector<HTMLElement>('[data-cta-sub]');
+    const actions = document.querySelector<HTMLElement>('[data-cta-actions]');
+    if (!headline) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      gsap.set([headline, sub, actions].filter(Boolean), {
+        opacity: 1,
+        y: 0,
+        filter: 'none',
+      });
+      return;
+    }
+
+    // Limpiar split previo si existe
+    if (splitInstance && typeof splitInstance.revert === 'function') {
+      splitInstance.revert();
+    }
+
+    // Guarda defensiva: si initCTAAnimations se llama dos veces sin cleanup intermedio
+    // (hot reload, navegación rara), kill los triggers previos antes de crear nuevos.
+    if (scrollTriggers.length > 0) {
+      scrollTriggers.forEach((t) => t.kill());
+      scrollTriggers = [];
+    }
+
+    splitInstance = new SplitText(headline, {
+      type: 'lines',
+      linesClass: 'cta-split-line',
+    });
+
+    gsap.set(splitInstance.lines, {
+      yPercent: 110,
+      opacity: 0,
+      filter: 'blur(10px)',
+    });
+    if (sub) gsap.set(sub, { opacity: 0, y: 30 });
+    if (actions) gsap.set(actions, { opacity: 0, y: 30 });
+
+    const st = ScrollTrigger.create({
+      trigger: headline.closest('section'),
+      start: 'top 75%',
+      once: true,
+      onEnter: () => {
+        gsap.to(splitInstance.lines, {
+          yPercent: 0,
+          opacity: 1,
+          filter: 'blur(0px)',
+          duration: 1.1,
+          stagger: 0.14,
+          ease: 'power3.out',
+        });
+        if (sub) {
+          gsap.to(sub, {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            delay: 0.5,
+            ease: 'power2.out',
+          });
+        }
+        if (actions) {
+          gsap.to(actions, {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            delay: 0.7,
+            ease: 'power2.out',
+          });
+        }
+      },
+    });
+    scrollTriggers.push(st);
+  }
+
+  function initAll() {
+    initCTAShader();
+    initCTAAnimations();
+  }
+
+  function cleanupAll() {
+    destroyCTAShader();
+    if (splitInstance && typeof splitInstance.revert === 'function') {
+      splitInstance.revert();
+      splitInstance = null;
+    }
+    // Kill solo los triggers creados por este componente (parametrizado,
+    // replicable: copia-pega a otra sección sin renombrar selectores).
+    scrollTriggers.forEach((t) => t.kill());
+    scrollTriggers = [];
+  }
+
+  // Init on first load
+  initAll();
+  // Astro View Transitions lifecycle
+  document.addEventListener('astro:page-load', initAll);
+  document.addEventListener('astro:before-swap', cleanupAll);
+</script>

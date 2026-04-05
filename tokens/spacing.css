@@ -1,0 +1,38 @@
+/* ============================================================
+   Kronos Mining — Design Tokens: Spacing semántico
+   ------------------------------------------------------------
+   Valores de spacing con rol semántico. Complementa la escala
+   nativa de Tailwind v4 (px-6, gap-4, etc.) con tokens nombrados
+   para los 4 roles recurrentes del sistema.
+
+   Documentación: design/tokens.md §3
+
+   Cuando uses:
+     - padding vertical de sección hero/CTA   → var(--space-section-y)
+     - padding horizontal de sección          → var(--space-section-x)
+     - gap entre botones en CTA row           → var(--space-actions-gap)
+     - margin entre headline y sub            → var(--space-headline-to-sub)
+     - margin entre sub y actions             → var(--space-sub-to-actions)
+
+   Para casos one-off, seguir usando clases Tailwind directas.
+   ============================================================ */
+
+@theme {
+  /* Padding vertical de secciones hero/CTA (clamp escalable) */
+  --space-section-y: clamp(4rem, 8vw, 5rem);
+
+  /* Padding horizontal de secciones */
+  --space-section-x: 1.5rem;            /* mobile base, override a 3rem en desktop via @media */
+
+  /* Gap entre botones en row de acciones */
+  --space-actions-gap: 1rem;
+
+  /* Margin entre headline y subtítulo */
+  --space-headline-to-sub: clamp(1.5rem, 3vw, 2.5rem);
+
+  /* Margin entre subtítulo y botones */
+  --space-sub-to-actions: clamp(2rem, 4vw, 3rem);
+
+  /* Margin bottom del bloque de acciones (antes del footer técnico) */
+  --space-actions-to-footer: clamp(3rem, 6vw, 5rem);
+}
