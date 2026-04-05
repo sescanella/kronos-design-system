@@ -49,7 +49,7 @@
   --color-neutral-900: #111827;
 
   /* ----- Shadows — Solo para fondos claros ----- */
-  /* Sobre fondos oscuros NO usar box-shadow tradicional. Usar glow pulse (ver reference/*/CTASection). */
+  /* Sobre fondos oscuros NO usar box-shadow tradicional. Usar glow pulse (ver canonical components en reference folder). */
   --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   --shadow-card-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
