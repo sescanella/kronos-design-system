@@ -2,7 +2,7 @@
 
 > **Propósito de este archivo.** Fuente única de verdad del lenguaje visual de kronosmining.tech. Escrito para ser leído por agentes LLM (Claude Code, Cursor, otros) y por humanos. Cuando construyas, modifiques o audites cualquier UI del proyecto, este documento manda sobre cualquier improvisación estética.
 >
-> **Cómo se lee.** Este archivo es el router. Los detalles viven en `design/tokens.md`, `design/typography.md`, `design/components.md`, `design/animations.md` y `design/anti-patterns.md`. Carga bajo demanda solo las secciones que necesites.
+> **Cómo se lee.** Este archivo es el router. Los detalles viven en `design/tokens.md`, `design/typography.md`, `design/icons.md`, `design/components.md`, `design/animations.md` y `design/anti-patterns.md`. Carga bajo demanda solo las secciones que necesites.
 >
 > **Componente canónico de referencia.** `src/components/CTASection.astro` es el componente que encarna el sistema al 100%. Cuando dudes sobre proporciones, jerarquías o microinteracciones, replica sus decisiones antes que inventar.
 
@@ -76,6 +76,16 @@ Detalles completos en `design/components.md`.
 **Cuando crees UI nueva**, la instrucción base es:
 
 > "Usa `<TechLabel>` para labels técnicas, `<BlueprintGrid>` para grids, y clases `.btn-kronos-*` para botones. Consulta `src/components/CTASection.astro` como referencia de estilo (tipografía, animaciones, overlays). No inventes tokens, colores, fonts ni escalas que no estén en `DESIGN.md` o `design/tokens.md`."
+
+---
+
+## 4b. Iconografía
+
+**Biblioteca oficial:** [Lucide Icons](https://lucide.dev) — stroke-based, tree-shakeable, multi-stack.
+
+Detalles completos en `design/icons.md`. Los 4 tamaños canónicos: Inline (16px), Standard (20px), Prominent (24px), Display (40–48px).
+
+**Regla de oro.** Los iconos son funcionales, no decorativos. Si un icono no aporta información que el texto no puede dar, no va. Los símbolos técnicos unicode (`◆`, `●`, `→`) del sistema se preservan — Lucide es para acciones e información, no para labels técnicas.
 
 ---
 
@@ -219,6 +229,8 @@ Ver `design/anti-patterns.md` para la lista completa. Los más críticos:
 - ❌ Naranjo en área `> 5%` de la vista.
 - ❌ Secciones del home sin clase `snap-section`.
 - ❌ Usar `<Button>` (componente legacy) en secciones nuevas — usar los patrones `.btn-kronos-*` del CTASection.
+- ❌ Iconos decorativos sin función — ver `design/icons.md §8`.
+- ❌ Mezclar librerías de iconos — Lucide es la única permitida.
 - ❌ Ignorar `prefers-reduced-motion`.
 - ❌ Headlines que no sean uppercase en secciones hero/CTA.
 
@@ -238,5 +250,5 @@ Reglas transversales que el skill hace cumplir:
 
 ---
 
-**Última actualización del sistema:** 2026-04-07 — Fase 4: site gutter unificado `--site-gutter` (§7.3, tokens.md §3), patrón de contenedor obligatorio, anti-pattern de gutter externo, header height como dependencia documentada (§7.4), componente ServiceSubNav extraído y registrado.
+**Última actualización del sistema:** 2026-04-07 — Fase 4: site gutter unificado `--site-gutter` (§7.3, tokens.md §3), patrón de contenedor obligatorio, anti-pattern de gutter externo, header height como dependencia documentada (§7.4), componente ServiceSubNav extraído y registrado. Añadido `design/icons.md` (Lucide Icons como biblioteca oficial).
 **Componente canónico vigente:** `src/components/CTASection.astro`.

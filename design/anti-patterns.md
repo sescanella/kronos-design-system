@@ -74,6 +74,28 @@
 
 ---
 
+### ❌ Usar iconos decorativos sin función
+
+**Qué no hacer.** Poner un icono al lado de cada título, en cada card, en cada label, "para que se vea más completo".
+
+**Por qué.** Kronos es restraint visual. Los iconos deben aportar información que el texto no puede dar (ej: un spinner indica loading, un chevron indica expandir). Un icono al lado de "MATERIALES" que es un cubo 3D no aporta nada.
+
+**Qué hacer.** Usar iconos solo cuando: (a) la acción no tiene texto (icon-only button), (b) el icono acelera el reconocimiento visual (estados: check, error, loading), (c) el contexto es una lista densa donde el icono diferencia tipos (`FileText` vs. `FileSpreadsheet`).
+
+Ver `design/icons.md` para la escala de tamaños, catálogo y patrones de implementación.
+
+---
+
+### ❌ Mezclar librerías de iconos
+
+**Qué no hacer.** Usar Lucide para botones, Material Symbols para cards, y Heroicons para badges en el mismo proyecto.
+
+**Por qué.** Cada librería tiene proporciones, stroke-widths y estilos distintos. Mezclar rompe la consistencia visual.
+
+**Qué hacer.** Lucide Icons es la única biblioteca permitida. Si un icono no existe en Lucide, buscar alternativa en Lucide o prescindir del icono. Nunca traer una segunda librería. Ver `design/icons.md §1` para la justificación completa.
+
+---
+
 ### ❌ Crear el mismo componente dos veces con distinta estética
 
 **Qué no hacer.** Tener `CardA.astro` y `CardB.astro` que hacen lo mismo pero con padding, border radius o font size distintos.
