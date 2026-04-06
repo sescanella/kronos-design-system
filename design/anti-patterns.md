@@ -84,6 +84,21 @@
 
 ---
 
+### ❌ Metadata corporativa como relleno
+
+**Qué no hacer.** Añadir el footer técnico (`KRONOS MINING · SANTIAGO, CHILE ● ISO 9001 ● EST. 2016`), labels técnicas, o coordenadas a una sección solo porque "queda espacio" o porque el patrón canónico lo incluye.
+
+**Por qué.** Los elementos de metadata son señales de identidad corporativa. Cuando se repiten en múltiples secciones de la misma página (o en secciones donde no aportan información nueva al usuario), se convierten en ruido visual que diluye su autoridad. El usuario ya leyó que Kronos tiene ISO en el hero — repetirlo en la slide 2 comunica inseguridad, no seriedad.
+
+**Test antes de añadir.** Preguntarse: *si elimino este elemento, ¿la sección pierde información que el usuario no puede obtener en otro lugar visible de la misma página?* Si la respuesta es no, no va.
+
+**Regla operativa.**
+- **Footer técnico** (razón social, certificaciones, año): máximo **una vez por página**. Ubicación natural: la última sección CTA o el footer global.
+- **Label técnica** (`◆ SISTEMA NN — NOMBRE`): sí se repite por sección, porque identifica cada slide — no es redundante, es navegacional.
+- **Coordenadas** (`-33.45°S / -70.66°W`): máximo una vez por página, en la sección que más se beneficie del contexto geográfico (hero o CTA final).
+
+---
+
 ### ❌ Inline styles con valores mágicos
 
 **Qué no hacer.** `<div style="padding: 23px; color: #083a75;">`.

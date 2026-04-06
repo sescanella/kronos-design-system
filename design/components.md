@@ -122,7 +122,7 @@ Cada uno es un patrón visual del sistema. Cuando necesites replicar UNO de esto
 #### Footer técnico (`.cta-footer`)
 - **Qué es.** Fila horizontal de metadata `KRONOS MINING · SANTIAGO, CHILE ● ISO 9001 / 14001 / 45001 ● EST. 2016` en Geist Mono 10px uppercase `letter-spacing: 0.25em`.
 - **Dónde copiar.** `.cta-footer`, `.cta-footer__dot` (dots en `rgba(255,120,0,0.6)` 6px).
-- **Cuándo usar.** Al final de secciones hero/CTA, o en el footer global. Adaptar contenido manteniendo estructura.
+- **Cuándo usar.** Máximo **una vez por página** — en la sección CTA final o en el footer global. No añadir en secciones intermedias donde la metadata corporativa ya es visible en otra parte de la misma página. Ver `anti-patterns.md §Componentes → Metadata corporativa como relleno`.
 
 ### 3.5 Scripts asociados
 
