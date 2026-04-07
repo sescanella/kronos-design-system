@@ -80,12 +80,84 @@ Estos valores NO viven en `@theme` pero son convención del sistema. Úsalos con
 
 ## 3. Spacing
 
-Kronos usa el **sistema de spacing nativo de Tailwind v4** (escala 0.25rem base). No hay tokens custom de spacing en `@theme`. Convenciones de uso:
+Kronos usa el **sistema de spacing nativo de Tailwind v4** (escala 0.25rem base) más un token custom para el gutter horizontal del sitio.
+
+### 3.1 Site gutter (`--site-gutter`)
+
+Token unificado para el padding horizontal de **todos** los contenedores con `max-width`: header, sub-nav, heroes, secciones de contenido, CTA. Un solo gutter garantiza que el borde izquierdo del logo alinee con el borde izquierdo del contenido en toda la página.
+
+| Breakpoint | Valor |
+|---|---|
+| mobile (default) | `1.5rem` (24px) |
+| desktop (≥ 1024px) | `3rem` (48px) |
+
+**Dónde vive.** En `src/styles/global.css` del proyecto consumidor como `:root` con media query. No tiene token en `@theme` porque Tailwind v4 no soporta media queries en `@theme` y un valor estático sería engañoso.
+
+```css
+/* src/styles/global.css */
+:root {
+  --site-gutter: 1.5rem;
+}
+@media (min-width: 1024px) {
+  :root {
+    --site-gutter: 3rem;
+  }
+}
+```
+
+**Cómo usar.** Siempre `padding-inline: var(--site-gutter)` en CSS scoped del componente o página. No usar clases Tailwind `px-6` / `px-12` como gutter de sección — esas clases producen los mismos valores numéricos pero son estáticas: `px-6` es siempre `1.5rem` sin importar el breakpoint, mientras que `--site-gutter` responde al media query y se propaga si el valor cambia en un solo lugar.
+
+**Decisión de diseño: salto discreto vs clamp().** Se eligió un salto discreto (`1.5rem` → `3rem` en `lg`) en lugar de `clamp(1.5rem, 4vw, 3rem)` por consistencia con el sistema de breakpoints del proyecto (las secciones usan saltos discretos en `padding-block` a los mismos breakpoints). Un `clamp()` crearía una transición fluida del gutter mientras el padding vertical salta — comportamiento mixto.
+
+**Referencia.** Las 5 referencias canónicas usan un solo gutter para header y contenido. Ninguna usa gutters diferenciados entre nav y secciones. Ver `design/references.md` §Patrones universales, punto 9.
+
+### 3.2 Patrón de contenedor
+
+El gutter se aplica en el elemento que lleva `max-width`. Hay dos variantes válidas:
+
+**Variante A — Outer + inner separados** (heroes, secciones con layers de fondo):
+```css
+/* ✅ CORRECTO — gutter en el inner que lleva max-width */
+.section-outer {
+  padding-block: 5rem;
+  /* sin padding-inline — full-width para fondos/shaders */
+}
+.section-inner {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding-inline: var(--site-gutter);
+}
+```
+
+**Variante B — Elemento único** (secciones sin layers, slides simples):
+```css
+/* ✅ CORRECTO — max-width y gutter en el mismo elemento */
+.section {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 5rem var(--site-gutter);
+}
+```
+
+**Lo que NO está permitido:**
+```css
+/* ❌ INCORRECTO — gutter en el outer, max-width en el inner */
+.section-outer {
+  padding: 5rem 1.5rem;
+}
+.section-inner {
+  max-width: 80rem;
+  margin: 0 auto;
+  /* sin padding — el inner ocupa 80rem completos, más ancho que el header */
+}
+```
+
+**Por qué la variante incorrecta desalinea.** El gutter se consume antes de que `max-width` aplique. El inner ocupa 80rem completos, mientras que el header (gutter dentro del max-width) tiene 80rem - 2×gutter de contenido útil.
+
+### 3.3 Otras convenciones de spacing
 
 | Contexto | Valor recomendado |
 |---|---|
-| Padding horizontal de secciones (mobile) | `px-6` (1.5rem) |
-| Padding horizontal de secciones (desktop) | `px-6 lg:px-12` (1.5 → 3rem) |
 | Padding vertical de hero/CTA | `py-16 lg:py-20` (4 → 5rem) |
 | Max-width de contenido principal | `max-w-7xl` (80rem) |
 | Max-width de párrafos largos | `max-w-[52ch]` (legibilidad) |

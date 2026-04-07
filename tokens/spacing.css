@@ -21,8 +21,10 @@
   /* Padding vertical de secciones hero/CTA (clamp escalable) */
   --space-section-y: clamp(4rem, 8vw, 5rem);
 
-  /* Padding horizontal de secciones */
-  --space-section-x: 1.5rem;            /* mobile base, override a 3rem en desktop via @media */
+  /* Site gutter horizontal — ELIMINADO de @theme.
+     El token responsive --site-gutter vive en global.css del consumidor
+     como :root con media query (1.5rem mobile, 3rem desktop).
+     Ver design/tokens.md §3.1 para documentación completa. */
 
   /* Gap entre botones en row de acciones */
   --space-actions-gap: 1rem;

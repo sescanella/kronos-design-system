@@ -119,9 +119,10 @@ Extraídos del reporte de investigación. Son los que se repiten **sin excepció
 3. **Video hero con overlay oscuro.** Todas las referencias top usan video de instalación real (no stock, no render 3D estático) con overlay entre `rgba(0,0,0,0.5)` y `rgba(0,0,0,0.75)` para legibilidad.
 4. **Headlines uppercase sin excepción.** Los titulares principales son uppercase siempre. El uppercase comunica precisión industrial y elimina la ambigüedad interpretativa.
 5. **Navbar transparente → opaca en scroll.** El 80% de las referencias usa `opacity: 0` en el header inicial, con transición a fondo oscuro semitransparente al hacer scroll. Crea la ilusión de que el contenido "emerge" del hero.
-6. **Labels técnicas como elementos de diseño.** Números de sistema, coordenadas, códigos de producto (`JACKAL MK-2`, `SAC-EC`, `SISTEMA 01`) usados como elementos visuales — metadatos que duplican como decoración tipográfica en Geist Mono uppercase con tracking amplio.
+6. **Labels técnicas como elementos de diseño.** Coordenadas, códigos de producto (`JACKAL MK-2`, `SAC-EC`, `CONTACTO`) usados como elementos visuales — metadatos que duplican como decoración tipográfica en Geist Mono uppercase con tracking amplio.
 7. **Flechas animadas, no íconos decorativos.** Los CTAs usan flechas `→` que se trasladan con `transform: translateX(4px)` en hover. Cero íconos SVG decorativos, cero ilustraciones.
 8. **Espacio negativo como declaración de intención.** Densidad visual deliberadamente baja. La cantidad de espacio en blanco (o en negro) es la señal de que la empresa no necesita llenar cada pixel para convencer al visitante.
+9. **Un solo gutter horizontal para nav y contenido.** El `<header>` es full-width con un inner wrapper que tiene el mismo padding horizontal que las secciones de contenido. El logo left edge alinea exactamente con el contenido de las secciones debajo. Ninguna de las 5 referencias canónicas ni las 5 secundarias usa gutters diferenciados entre nav y content. Los mecanismos varían (CSS custom properties, `clamp()`, `vw` units, CSS Grid) pero el resultado visual es idéntico: una sola línea vertical de alineación. Verificado abril 2026.
 
 ---
 

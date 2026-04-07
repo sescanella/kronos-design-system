@@ -94,7 +94,7 @@
 
 **Regla operativa.**
 - **Footer técnico** (razón social, certificaciones, año): máximo **una vez por página**. Ubicación natural: la última sección CTA o el footer global.
-- **Label técnica** (`◆ SISTEMA NN — NOMBRE`): sí se repite por sección, porque identifica cada slide — no es redundante, es navegacional.
+- **Label técnica** (`◆ NOMBRE`): sí se repite por sección, porque identifica cada slide — no es redundante, es navegacional.
 - **Coordenadas** (`-33.45°S / -70.66°W`): máximo una vez por página, en la sección que más se beneficie del contexto geográfico (hero o CTA final).
 
 ---
@@ -108,6 +108,20 @@
 **Qué hacer.** Clases Tailwind o `<style>` scoped del `.astro` con valores derivados de `var(--*)` o escalas Tailwind estándar.
 
 **Excepción legítima.** Valores calculados dinámicamente en runtime (e.g., `style={`--word-index: ${i}`}` para staggers CSS custom property). Siempre custom properties, nunca valores hex/px hardcodeados.
+
+---
+
+### ❌ Gutter horizontal en un wrapper externo que tiene un inner con max-width
+
+**Qué no hacer.** Poner `padding: 5rem 1.5rem` o `padding: 5rem var(--site-gutter)` en un div full-width que contiene un hijo con `max-width: 80rem; margin: 0 auto`.
+
+**Por qué.** El gutter se consume antes de que `max-width` aplique. El inner ocupa 80rem completos, mientras que el header (gutter dentro de max-width) usa 80rem - 2×gutter. Resultado: el logo del header arranca en un borde izquierdo distinto al del contenido. Sutil en pantallas < 80rem, evidente en monitores ≥ 1440px.
+
+**Qué hacer.** Mover `padding-inline: var(--site-gutter)` al elemento que lleva `max-width`. El outer solo lleva `padding-block`. Ver `tokens.md §3.2` para las dos variantes válidas de contenedor.
+
+**No aplica cuando** `max-width` y `padding` están en el mismo elemento (variante B de §3.2) — ahí el gutter SÍ está dentro del max-width por definición.
+
+**Test visual.** En viewport ≥ 1440px, trazar línea vertical desde el logo del header hacia abajo. Si el contenido de cualquier sección no toca esa línea, el gutter está en el lugar equivocado.
 
 ---
 
