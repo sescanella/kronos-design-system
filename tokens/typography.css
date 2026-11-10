@@ -38,7 +38,7 @@
   /* Sans: headlines, sub, body, botones. La familia principal del sistema. */
   --font-sans: "Instrument Sans", system-ui, -apple-system, sans-serif;
 
-  /* Mono: labels técnicas (SISTEMA NN), coordenadas, footer técnico, metadata.
+  /* Mono: labels técnicas, coordenadas, footer técnico, metadata.
      NOTA DE NAMING LEGACY: el token se llama --font-heading por razones históricas,
      pero semánticamente es la fuente monoespaciada de labels técnicas, NO la de
      headlines. Los headlines usan --font-sans. Mantener el nombre legacy evita

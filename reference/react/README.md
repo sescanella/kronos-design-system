@@ -15,7 +15,7 @@ system. La implementación debe partir del canónico Astro
 (`../astro/CTASection.astro`) y portarlo a React preservando:
 
 - Estructura de 4 capas (shader / overlay / grid / content)
-- Label técnica `◆ SISTEMA NN — NOMBRE ─── coordenada`
+- Label técnica `◆ LABEL ─── coordenada`
 - Headline oversized uppercase con clamp + última palabra en accent
 - Sub + botón primary (shimmer + glow pulse) + botón outline (liquid fill)
 - Footer técnico con separadores `●`
@@ -56,8 +56,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './CTASection.module.css'; // para .btn-kronos-*
 
 interface Props {
-  systemNumber: string;   // ej. "05"
-  systemName: string;     // ej. "CONTACTO"
+  label: string;          // ej. "CONTACTO"
   coordinate: string;     // ej. "-33.45°S / -70.66°W"
   headline: [string, string]; // ej. ["Ingeniería que", "resiste."]
   sub: string;

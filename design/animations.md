@@ -54,8 +54,9 @@ Cualquier sección que use Patrón A debe tener 4 layers con z-index estandariza
 
 **Snippet de referencia.**
 Copiar desde `src/components/CTASection.astro`:
-- HTML: las 4 layers (`cta-shader-layer`, `cta-overlay`, `cta-grid`, `cta-content`).
-- CSS scoped: `.cta-shader-layer`, `.cta-shader-layer :global(canvas)`, `.cta-overlay`, `.cta-grid`.
+- HTML: Layer 1 (`cta-shader-layer`), Layer 2 (`cta-overlay`), Layer 4 (`cta-content`).
+- Layer 3: usar `<BlueprintGrid class="z-10" />` (componente global, no copiar CSS).
+- CSS scoped: `.cta-shader-layer`, `.cta-shader-layer :global(canvas)`, `.cta-overlay`.
 - Script: la función `initCTAShader()` completa, `destroyCTAShader()`, y los listeners `astro:page-load` / `astro:before-swap`.
 
 **Uniforms del shader (referencia, valores exactos en el canónico).**
@@ -128,13 +129,7 @@ Copiar desde `CTASection.astro`:
 - En mobile, el shimmer sweep sigue funcionando en tap (`:active` hereda `:hover` en móviles modernos). Se mantiene activo.
 
 **Snippet de referencia.**
-Copiar desde `CTASection.astro` las clases:
-- `.btn-kronos-primary` (base, `isolation: isolate`, `overflow: hidden`).
-- `.btn-kronos-primary::before` (shimmer).
-- `.btn-kronos-primary__label`, `.btn-kronos-primary__arrow` (contenido sobre `z-index: 2`).
-- `.btn-kronos-primary:hover`, `:hover::before`, `:hover .btn-kronos-primary__arrow`.
-- `.btn-kronos-primary:focus-visible`.
-- `@keyframes cta-glow-pulse`.
+Todas las clases `.btn-kronos-*` son **globales** (definidas en `src/styles/global.css`). No copiar CSS — solo usar las clases en HTML. Incluye `@keyframes kronos-glow-pulse` y reduced-motion fallbacks. Mobile full-width automático `< 768px`.
 
 **HTML mínimo:**
 ```html
@@ -165,10 +160,7 @@ Copiar desde `CTASection.astro` las clases:
 - Transición del `clip-path` con `cubic-bezier(0.25, 0.46, 0.45, 0.94)` que da la sensación de líquido.
 
 **Snippet de referencia.**
-Copiar desde `CTASection.astro`:
-- `.btn-kronos-outline`, `.btn-kronos-outline__fill`, `.btn-kronos-outline__label`.
-- `.btn-kronos-outline:hover`, `:hover .btn-kronos-outline__fill`.
-- `.btn-kronos-outline:focus-visible`.
+Todas las clases `.btn-kronos-outline*` son **globales** (definidas en `src/styles/global.css`). No copiar CSS — solo usar las clases en HTML. Reduced-motion fallback incluido.
 
 **HTML mínimo:**
 ```html

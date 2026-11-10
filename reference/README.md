@@ -35,7 +35,7 @@ Lo que NO se comparte:
 1. Copiar `astro/CTASection.astro` como referencia visual del lenguaje objetivo.
 2. Re-implementar en el stack nuevo preservando:
    - Estructura de 4 capas (shader / overlay / grid / content)
-   - Label técnica con el patrón `◆ SISTEMA NN — NOMBRE ─── coordenada`
+   - Label técnica con el patrón `◆ LABEL ─── coordenada`
    - Headline oversized uppercase con clamp + última palabra en accent
    - Sub + botones primary (shimmer + glow pulse) + outline (liquid fill)
    - Footer técnico con separadores `●`

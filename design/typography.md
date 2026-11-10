@@ -37,7 +37,7 @@
 **Nota de naming legacy.** El token se llama `--font-heading` por razones históricas, pero semánticamente es la fuente **mono para labels técnicas**, NO la fuente de headlines. Los headlines del sistema usan `--font-sans` (Instrument Sans). No renombrar el token actual (rompe clases Tailwind `font-heading` ya en uso en el árbol). Fix futuro sugerido: añadir un alias `--font-mono: var(--font-heading)` en el bloque `@theme` de `src/styles/global.css` y migrar gradualmente los consumidores, manteniendo el legacy como shim.
 
 **Usos en el sistema:**
-- Labels técnicas tipo `SISTEMA 05 — CONTACTO` (peso `600`, uppercase, tracking `0.3em`).
+- Labels técnicas contextuales tipo `CONTACTO` (peso `600`, uppercase, tracking `0.3em`).
 - Coordenadas y metadata (`-33.45°S / -70.66°W`, peso `400`).
 - Footer técnico (razón social · ISO · EST., peso `600`, uppercase, tracking `0.25em`).
 - Tics (`◆`) y dot separators (`●`) técnicos de labels y footers.
@@ -55,7 +55,7 @@ Una fila por rol tipográfico. Valores extraídos de `src/components/CTASection.
 | **Sub / lead** | Párrafo bajo headline | sans | `clamp(1rem, 1.15vw, 1.25rem)` | `400` | `1.6` | normal | none | `rgba(255,255,255,0.6)` | `CTASection.astro` `.cta-sub` |
 | **Body** | Texto de lectura larga | sans | `?` | `?` | `?` | `?` | none | `?` | [pendiente — cuando se audite blog / artículo detalle] |
 | **Button label** | Texto de botones | sans | `0.875rem` | `700` | (heredado) | `0.15em` | uppercase | `#ffffff` (primary) / `#ffffff → #083A75` (outline en hover) | `CTASection.astro` `.btn-kronos-primary`, `.btn-kronos-outline` |
-| **Label técnica** | `SISTEMA NN — NOMBRE` | mono | `11px` | `600` | (heredado) | `0.3em` | uppercase | `rgba(255,255,255,0.85)` | `CTASection.astro` `.cta-label` |
+| **Label técnica** | `CONTACTO`, `PORTADA`, etc. | mono | `11px` | `600` | (heredado) | `0.3em` | uppercase | `rgba(255,255,255,0.85)` | `CTASection.astro` `.cta-label` |
 | **Metadata técnica** | Coordenadas, IDs | mono | `11px` | `400` | (heredado) | `0.08em` | none | `rgba(255,255,255,0.4)` | `CTASection.astro` `.cta-coord` |
 | **Footer técnico** | Razón social · ISO · EST. | mono | `10px` (mobile: `9px`) | `600` | (heredado) | `0.25em` | uppercase | `rgba(255,255,255,0.3)` | `CTASection.astro` `.cta-footer` |
 | **Dot separator** | Separador en footer técnico | mono | `6px` | — | — | — | — | `rgba(255,120,0,0.6)` | `CTASection.astro` `.cta-footer__dot` |
@@ -102,7 +102,7 @@ El tracking es donde más errores aparecen. Las reglas son específicas por fami
 
 **Obligatorio uppercase:**
 - Headlines de hero y CTA (siempre, sin excepciones).
-- Labels técnicas (`SISTEMA NN`, coordenadas con prefijo alfabético, footer técnico).
+- Labels técnicas contextuales (coordenadas con prefijo alfabético, footer técnico).
 - Texto de botones primarios y outline.
 - Tags, chips, badges técnicos.
 
@@ -148,7 +148,7 @@ Extraídos literalmente de `src/components/CTASection.astro`. Copiar sin modific
 ```html
 <div class="cta-meta">
   <span class="cta-tick" aria-hidden="true">◆</span>
-  <span class="cta-label">SISTEMA 05 — CONTACTO</span>
+  <span class="cta-label">CONTACTO</span>
   <div class="cta-divider" aria-hidden="true"></div>
   <span class="cta-coord">-33.45°S / -70.66°W</span>
 </div>

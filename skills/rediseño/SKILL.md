@@ -3,7 +3,7 @@ name: rediseño
 description: Rediseña páginas y componentes de Kronos Mining replicando el lenguaje visual canónico de `CTASection.astro`. Úsalo cuando el usuario pida "rediseñar X", "aplicar el estilo del home a Y", "alinear al design system", "modernizar" o "consistente con el diseño". A diferencia de `frontend-design` (libertad creativa), constraine a lo ya definido en el repo.
 ---
 
-Skill constrainer, no creativo. Replica el sistema ya definido en `DESIGN.md` y `CTASection.astro`. Prohíbe improvisar estética nueva.
+Skill constrainer, no creativo. Replica el sistema ya definido en `DESIGN.md`, los componentes globales (`TechLabel`, `BlueprintGrid`, clases `.btn-kronos-*` / `.kronos-meta*` / `.kronos-blueprint`) y `CTASection.astro` como referencia de overlays, headlines y animaciones. Prohíbe improvisar estética nueva.
 
 ## Cuándo usar
 
@@ -19,6 +19,16 @@ Skill constrainer, no creativo. Replica el sistema ya definido en `DESIGN.md` y 
 
 **Siempre (3):** `DESIGN.md`, `src/components/CTASection.astro`, archivo target.
 
+**Componentes y clases globales (conocer antes de implementar):**
+- `<TechLabel>` (`src/components/TechLabel.astro`) — label técnica `◆ LABEL ─── coord`. Props: `label`, `coord?`.
+- `<BlueprintGrid>` (`src/components/BlueprintGrid.astro`) — grid decorativo. Props: `class?`.
+- `<ServiceSubNav>` (`src/components/ServiceSubNav.astro`) — sub-nav sticky para secciones/categorías. Props: `items`, `navId`, `sectionClass`, `ariaLabel?`. Usar como referencia visual cuando la página tiene navegación por categorías o secciones.
+- `.btn-kronos-primary` / `.btn-kronos-outline` — botones con shimmer + liquid fill (global en `src/styles/global.css`).
+- `.kronos-meta*` — label técnica CSS (consumida por TechLabel, global en `global.css`).
+- `.kronos-blueprint` — blueprint grid CSS (consumida por BlueprintGrid, global en `global.css`).
+
+**Página hermana de referencia (obligatorio para páginas completas).** Antes de rediseñar una página, buscar en `src/pages/` una página interna ya alineada al sistema (grep por `TechLabel`, `BlueprintGrid`, `ServiceSubNav`). Leer completa la más similar al target para extraer el patrón de estructura (hero full-screen, capas, sub-nav, secciones). Si ninguna existe, usar solo `CTASection.astro` como referente.
+
 **Bajo demanda, según el caso:**
 - Dudas de color → `design/tokens.md`
 - Dudas sobre qué está prohibido → `design/anti-patterns.md`
@@ -29,11 +39,11 @@ Skill constrainer, no creativo. Replica el sistema ya definido en `DESIGN.md` y 
 
 ## Flujo (3 pasos)
 
-**1. Diagnóstico.** Lee los 3 obligatorios + el target. Lista qué cumple ya el sistema, qué viola `anti-patterns.md`, qué componentes existentes puedes reutilizar. Detecta el `SISTEMA NN` correcto según `DESIGN.md §6`.
+**1. Diagnóstico.** Lee los 3 obligatorios + el target + la página hermana de referencia (si el target es una página completa). Lista qué cumple ya el sistema, qué viola `anti-patterns.md`, qué componentes/clases globales puedes reutilizar (consulta `design/components.md §2` para componentes ALINEADOS relevantes). Elige una label contextual apropiada para la sección (ej. `CONTACTO`, `SERVICIOS`).
 
 **2. Propuesta (condicional).** Si el cambio abarca más de una sección o introduce un patrón nuevo, escribe al usuario un plan breve (≤150 palabras: diagnóstico, estructura, copy propuesto, animaciones, ≤2 preguntas bloqueantes) y espera confirmación. Si el cambio es puntual con patrón existente, implementa directo.
 
-**3. Implementar + auditar.** Copia patrones desde `CTASection.astro` (no los inventes). Los 4 patrones canónicos de animación y sus snippets viven en `design/animations.md`; los valores numéricos exactos se copian del canónico, nunca se tipean de memoria. Todo color desde `@theme`. Ejecuta la checklist. Corre `npm run build`. Reporta.
+**3. Implementar + auditar.** Usa los componentes globales (`<TechLabel>`, `<BlueprintGrid>`) y clases globales (`.btn-kronos-*`) — no dupliques su CSS. Para overlays, headlines y animaciones, copia patrones desde `CTASection.astro`. Los 4 patrones canónicos de animación viven en `design/animations.md`; los valores numéricos exactos se copian del canónico, nunca se tipean de memoria. Todo color desde `@theme`. Ejecuta la checklist. Corre `npm run build`. Reporta.
 
 ## Checklist de auditoría (pre-entrega)
 
@@ -44,11 +54,14 @@ Skill constrainer, no creativo. Replica el sistema ya definido en `DESIGN.md` y 
 5. Animaciones con fallback `prefers-reduced-motion` y mobile degradation.
 6. `:focus-visible` con outline visible en todo elemento interactivo.
 7. Si vive en `src/pages/index.astro`, tiene clase `snap-section`.
-8. Copy 100% español. Sin emojis decorativos. Sin `<Button>` legacy. Sin `data-reveal` + GSAP SplitText simultáneos.
+8. Copy 100% español. Sin emojis decorativos. Sin `<Button>` legacy (usar `.btn-kronos-*` globales). Sin `data-reveal` + GSAP SplitText simultáneos.
+9. Labels técnicas via `<TechLabel>`, no copiando `.kronos-meta*` CSS manualmente. Blueprint grids via `<BlueprintGrid>`.
+10. Cero duplicación de CSS de botones/meta/grid — esos estilos son globales en `global.css`.
 
 ## PROHIBITED
 
 - Inventar tokens, hex, fonts o escalas fuera de `@theme` y `DESIGN.md`.
+- Duplicar CSS de `.btn-kronos-*`, `.kronos-meta*` o `.kronos-blueprint` en scoped styles — esos son globales.
 - Re-implementar patrones de animación desde cero en lugar de copiar de `CTASection.astro` + `design/animations.md`.
 - Tocar copy de negocio (textos, datos, imágenes del cliente).
 - Añadir dependencias npm sin aprobación del usuario.
@@ -67,6 +80,6 @@ Skill constrainer, no creativo. Replica el sistema ya definido en `DESIGN.md` y 
 
 ## Señal de éxito
 
-1. La página rediseñada usa el mismo vocabulario visual que `CTASection.astro` (labels técnicas, uppercase headlines, paleta, patrones de botón) — no es indistinguible, comparte lenguaje.
+1. La página rediseñada usa el mismo vocabulario visual que `CTASection.astro` (`<TechLabel>`, uppercase headlines, paleta, `.btn-kronos-*`, `<BlueprintGrid>`) — no es indistinguible, comparte lenguaje.
 2. `npm run build` pasa sin warnings; grep de hex en el archivo target devuelve solo excepciones documentadas.
-3. Diff del commit toca el target + opcionalmente `design/components.md` si se registró un componente nuevo. Cero dependencias npm nuevas.
+3. Diff del commit toca el target + opcionalmente `design/components.md` si se registró un componente nuevo. Cero dependencias npm nuevas. Cero CSS duplicado de estilos globales.
