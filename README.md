@@ -35,6 +35,7 @@ kronos-design-system/
 ├── fonts/
 │   ├── InstrumentSans-Variable.ttf
 │   └── GeistMono-Variable.ttf
+├── logos/                     ← logo KM en PNG: azul, blanco, gris, naranjo, negro
 ├── reference/
 │   ├── astro/
 │   │   └── CTASection.astro   ← canónico stack Astro
