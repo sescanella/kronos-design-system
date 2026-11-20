@@ -4,9 +4,9 @@ Sistema de diseño compartido entre todos los productos de Kronos Mining:
 sitio web, aplicaciones internas, paneles técnicos, futuros proyectos.
 
 **Identidad visual:** industrial-tech con restraint cromático, inspirada en Anduril,
-Saronic y Mach Industries. Paleta azul `#083A75` + naranjo `#FF5B00`, tipografía
-Instrument Sans + Geist Mono, labels técnicas mono uppercase, headlines oversized,
-animaciones firmadas (shader mesh gradient, GSAP SplitText, shimmer button, liquid fill).
+Saronic, Mach Industries y Hadrian. Paleta azul `#083A75` + naranjo `#FF5B00`, tipografía
+Instrument Sans + Geist Mono, titulares livianos tipo oración, etiquetas técnicas en mono y
+7 patrones de movimiento con fichas (`design/animations.md`). El concepto: el plano de taller.
 
 > **Regla cardinal.** Este repo es la única fuente de verdad del lenguaje visual.
 > Ningún proyecto consumidor puede definir colores, fuentes, escalas tipográficas
@@ -179,7 +179,7 @@ simultáneamente.
 - `design/tokens.md`, `typography.md`, `components.md`, `animations.md`, `anti-patterns.md`, `references.md`
 
 ### Componentes canónicos
-- **Astro:** `reference/astro/CTASection.astro` — hero CTA con shader WebGL + GSAP SplitText + shimmer button + liquid fill
+- **Astro:** `reference/astro/CTASection.astro` — el cierre de toda página del estándar: etiqueta mono, titular tipo oración, bajada, botones y línea de datos de la empresa
 - **React:** pendiente (crear cuando se migre la app React al sistema)
 - **React Native:** pendiente
 

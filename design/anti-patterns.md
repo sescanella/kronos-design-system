@@ -26,7 +26,7 @@
 
 **Por qué.** Es la firma cromática. Si se satura, pierde significado y el sitio empieza a verse "startup colorida" en vez de "defense-tech serio". Referencia: Anduril, True Anomaly, Saronic — todos restringen su acento a <5%.
 
-**Qué hacer.** Accent solo en: CTAs primarios (1-2 por vista máximo), palabras clave de headlines (1-3 palabras por headline), tics técnicos (◆), dots de separación del footer, destellos de mesh gradient al 35%. **Auditar siempre con un pantallazo**: si el naranjo salta como protagonista, reducir.
+**Qué hacer.** Accent solo en: el ◆ de la etiqueta técnica, el botón principal (uno por vista), las cotas del dibujo y el riel de calidad. Nunca dentro de un titular, nunca como color de un párrafo, una etiqueta o una cifra. **Auditar siempre con un pantallazo**: si el naranjo salta como protagonista, reducir.
 
 ---
 
@@ -46,19 +46,17 @@
 
 **Por qué.** Kronos es industrial, no editorial ni lujo. Serif contradice la estética Anduril/defense-tech.
 
-**Qué hacer.** Si alguien pide "algo más editorial", resiste. La respuesta es oversized sans uppercase con tracking ajustado.
+**Qué hacer.** Si alguien pide "algo más editorial", resiste. La respuesta es la escala del sans liviano (titulares tipo oración, peso 300, tracking negativo) contra la etiqueta mono chica.
 
 ---
 
-### ❌ Headlines que no sean uppercase en secciones hero/CTA
+### ❌ Titulares en mayúsculas o con una palabra en naranjo
 
-**Qué no hacer.** "Ingeniería que resiste" en Title Case o sentence case en el hero.
+**Qué no hacer.** Un `h1`, `h2` o `h3` en mayúsculas (por clase, por CSS o heredado del contenedor), en negrita pesada, o con una palabra pintada de naranjo.
 
-**Por qué.** El uppercase oversized es parte de la firma visual del sistema. Es lo que comunica seriedad industrial.
+**Por qué.** Medido el 13-nov-2026 en los home de Anduril, Saronic, Mach Industries y Hadrian, a 1440 y 393 px: no hay titulares de sección en mayúsculas en ninguno. La firma está en la escala (titular grande y liviano contra etiqueta mono chica), no en gritar. El naranjo dentro del titular le compite al botón principal.
 
-**Qué hacer.** Todos los headlines de hero y CTA en uppercase con `letter-spacing: -0.02em` (tracking ajustado porque uppercase con tracking default se ve espaciado raro).
-
-**Excepción legítima.** Headlines de páginas internas tipo blog post / artículo individual pueden ser title case porque son lectura larga editorial.
+**Qué hacer.** Titulares tipo oración, peso 300, blancos, con `k-h1`, `k-h2` y `k-h3` (`src/styles/estandar.css` de kronos-web). Las mayúsculas quedan para la etiqueta mono, los botones, los rótulos y los datos; nunca para un titular. Reglas 1 y 2 de `ESTANDAR.md` (kronos-web).
 
 ---
 
@@ -68,9 +66,9 @@
 
 **Qué no hacer.** Importar `Button.astro` y usarlo en hero, CTA, secciones destacadas.
 
-**Por qué.** `Button.astro` es legacy pre-rediseño. No soporta las microinteracciones del sistema nuevo (shimmer sweep, glow pulse, liquid fill).
+**Por qué.** `Button.astro` es legacy pre-rediseño: no usa las clases globales `.btn-kronos-*` ni las fichas de movimiento (patrón 5 de `design/animations.md`).
 
-**Qué hacer.** Usar las clases inline `.btn-kronos-primary` y `.btn-kronos-outline` como están definidas en `src/components/CTASection.astro`. Copiarlas directamente. Si un patrón de botón nuevo aparece repetidamente, entonces extraerlo como componente — pero no antes de verlo usado en 3+ lugares.
+**Qué hacer.** Usar las clases globales `.btn-kronos-primary` y `.btn-kronos-outline` de `src/styles/global.css`, sin copiar su CSS. Si un patrón de botón nuevo aparece repetidamente, entonces extraerlo como componente — pero no antes de verlo usado en 3+ lugares.
 
 ---
 
@@ -117,7 +115,7 @@ Ver `design/icons.md` para la escala de tamaños, catálogo y patrones de implem
 **Regla operativa.**
 - **Footer técnico** (razón social, certificaciones, año): máximo **una vez por página**. Ubicación natural: la última sección CTA o el footer global.
 - **Label técnica** (`◆ NOMBRE`): sí se repite por sección, porque identifica cada slide — no es redundante, es navegacional.
-- **Coordenadas** (`-33.45°S / -70.66°W`): máximo una vez por página, en la sección que más se beneficie del contexto geográfico (hero o CTA final).
+- **Coordenadas**: solo si son un dato que el visitante usa (cómo llegar a la planta), nunca como adorno de una etiqueta. Sebastián pidió quitarlas de la portada el 13-nov-2026.
 
 ---
 
@@ -149,26 +147,47 @@ Ver `design/icons.md` para la escala de tamaños, catálogo y patrones de implem
 
 ## Animación
 
-### ❌ Hero con `data-reveal` Y GSAP SplitText simultáneos
+### ❌ Animar fuera de los 7 patrones o de las fichas
 
-**Qué no hacer.** Añadir `data-reveal` (que dispara `ScrollReveal.astro`) a un elemento que también tiene GSAP SplitText animándolo.
+**Qué no hacer.** Inventar una duración, una curva o un efecto: `transition: all 0.3s ease`, un rebote, un desenfoque, un revelado letra a letra.
 
-**Por qué.** Los dos sistemas compiten por las mismas transforms. El resultado es un flash, un salto, o el texto que nunca se revela.
+**Por qué.** Cada valor suelto es una variante más. En nov 2026 el sitio llegó a 24 duraciones y 13 curvas distintas, y no se sentía una sola pieza.
 
-**Qué hacer.** Elegir uno. En secciones hero/CTA con SplitText, no usar `data-reveal`. En secciones de body cards con IntersectionObserver + CSS, usar `data-reveal` pero NO GSAP.
+**Qué hacer.** Usar uno de los 7 patrones de `design/animations.md` con sus fichas (`--k-dur-*`, `--k-ease-*`). Si ninguno sirve, se propone un patrón nuevo antes de construirlo.
+
+---
+
+### ❌ Mover tarjeta por tarjeta, contar cifras o brillar en bucle
+
+**Qué no hacer.** Que cada tarjeta aparezca por su cuenta al bajar, que una cifra cuente desde cero, que un botón respire en bucle, que una tarjeta gire siguiendo el mouse.
+
+**Por qué.** Es movimiento que no comunica nada nuevo y le compite al contenido. Ninguna de las referencias medidas lo hace (regla 14 de `ESTANDAR.md`).
+
+**Qué hacer.** La sección aparece como un bloque (patrón 3); las cifras van en el texto o como especificación mono; el botón responde solo cuando se lo toca (patrón 5).
 
 ---
 
 ### ❌ Ignorar `prefers-reduced-motion`
 
-**Qué no hacer.** Lanzar shaders, SplitText, glow pulses, shimmer sweeps sin verificar la media query.
+**Qué no hacer.** Lanzar una entrada, una aparición, un trazo o un video sin mirar `prefers-reduced-motion`.
 
 **Por qué.** Accesibilidad no negociable. Usuarios con vestibular disorders, epilepsia o preferencia de usuario configurada se ven afectados.
 
-**Qué hacer.** Toda animación debe tener su fallback:
-- Shader: no se monta, queda fondo sólido.
-- GSAP SplitText: `gsap.set` al estado final directamente.
-- CSS animations: `@media (prefers-reduced-motion: reduce) { animation: none !important; }`.
+**Qué hacer.** Toda animación tiene su versión quieta (columna "Movimiento reducido" de cada patrón en `design/animations.md`):
+- Entrada y aparición de sección: quietas y visibles.
+- Trazo: dibujado desde el principio.
+- Respuesta: solo color.
+- Video: el póster.
+
+---
+
+### ❌ Algo que se mueve solo más de 5 segundos, sin pausa
+
+**Qué no hacer.** Un video en bucle, un carrusel que avanza solo o cualquier cosa que se mueva sola más de 5 s junto a otro contenido, sin un botón para detenerla.
+
+**Por qué.** WCAG 2.2.2 (nivel A, el mínimo) lo exige. Arrancar al aparecer en pantalla cuenta como arrancar solo.
+
+**Qué hacer.** Botón de pausa mono chico en cada video en bucle (patrón 6), o que el movimiento termine antes de 5 s (como el dibujo del spool del home, 4,2 s).
 
 ---
 
@@ -190,7 +209,7 @@ Ver `design/icons.md` para la escala de tamaños, catálogo y patrones de implem
 
 **Por qué.** Rompe el flujo del scroll-snap del home. La sección queda "entre slides" y descuadra la experiencia.
 
-**Qué hacer.** Toda sección que vive en `src/pages/index.astro` debe tener `class="snap-section ..."`. Respetar `min/max-height: calc(100svh - 5rem)`. Ver `src/styles/global.css` líneas 386–403.
+**Qué hacer.** Toda sección que vive en `src/pages/index.astro` lleva `class="snap-section ..."`. El ajuste de scroll es solo del home: ninguna pieza compartida (el cierre, el pie) lleva `snap-section`, porque lo activaría en todas las páginas.
 
 **Excepción documentada.** El `<footer>` es deliberadamente NO snap point (regla en `global.css` línea ~402). Esa es la única excepción.
 
@@ -268,7 +287,7 @@ Ver `design/icons.md` para la escala de tamaños, catálogo y patrones de implem
 
 **Por qué.** `CTASection.astro` es la encarnación del sistema. Cualquier sección que divergue sin justificación introduce drift.
 
-**Qué hacer.** Antes de construir: leer `CTASection.astro` completo. Copiar su estructura (label técnico + headline oversized + sub + botones + footer técnico) y adaptar contenido. Si divergues, justifica en un comentario del componente nuevo.
+**Qué hacer.** Antes de construir: leer `reference/astro/CTASection.astro` y, en kronos-web, `src/styles/ESTANDAR.md` y `src/styles/estandar.css`. Copiar su estructura (etiqueta mono → titular tipo oración → bajada → botones → una línea de datos) y adaptar el contenido. Si divergues, justifica en un comentario del componente nuevo.
 
 ---
 
@@ -284,13 +303,22 @@ Ver `design/icons.md` para la escala de tamaños, catálogo y patrones de implem
 
 ---
 
-### ❌ Contraste insuficiente en texto blanco sobre mesh/shader
+### ❌ Contraste insuficiente: texto sobre fotos o grises demasiado bajos
 
-**Qué no hacer.** Texto blanco directamente sobre un mesh gradient colorido sin overlay.
+**Qué no hacer.** Texto blanco directamente sobre una foto o un video sin velo, o texto con opacidad bajo 0,55 sobre el azul.
 
-**Por qué.** Contraste baja a <3:1 en zonas claras del gradiente. Ilegible.
+**Por qué.** En las zonas claras de una foto el contraste baja de 3:1. El blanco al 0,4 sobre `#052650` da 3,5:1 y no alcanza AA en rótulos chicos.
 
-**Qué hacer.** Siempre añadir overlay gradient encima del shader (ver `.cta-overlay` en CTASection). Radial + linear combinados. Opacidad `0.55–0.82`. Validar con Lighthouse o axe.
+**Qué hacer.** Velo azul (`k-shade`) bajo el rótulo de toda foto; grises de texto solo 1 / 0,78 / 0,62 / 0,55 (`design/tokens.md` §1.4). Validar con Lighthouse o axe.
+
+---
+
+## Retirados
+
+Reglas de abril de 2026 que salieron el 20-nov-2026 (5IN-824), con su razón:
+
+- **❌ Headlines que no sean uppercase en secciones hero/CTA.** La reemplaza "❌ Titulares en mayúsculas o con una palabra en naranjo": la medición de las referencias (13-nov-2026) mostró lo contrario. Detalle en `ESTANDAR.md` de kronos-web.
+- **❌ Hero con `data-reveal` y GSAP SplitText simultáneos.** El revelado con SplitText salió del sistema (`design/animations.md` § Retirados), así que el conflicto ya no puede ocurrir.
 
 ---
 

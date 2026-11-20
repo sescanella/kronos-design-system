@@ -1,85 +1,114 @@
 ---
 name: rediseño
-description: Rediseña páginas y componentes de Kronos Mining replicando el lenguaje visual canónico de `CTASection.astro`. Úsalo cuando el usuario pida "rediseñar X", "aplicar el estilo del home a Y", "alinear al design system", "modernizar" o "consistente con el diseño". A diferencia de `frontend-design` (libertad creativa), constraine a lo ya definido en el repo.
+description: Rediseña páginas y componentes de Kronos Mining con el kit del estándar (ESTANDAR.md + estandar.css + PageHero + CTASection) y los 7 patrones de movimiento del design system. Úsalo cuando el usuario pida "rediseñar X", "aplicar el estilo del home a Y", "alinear al design system", "modernizar" o "consistente con el diseño". A diferencia de `frontend-design` (libertad creativa), constraine a lo ya definido en el repo.
 ---
 
-Skill constrainer, no creativo. Replica el sistema ya definido en `DESIGN.md`, los componentes globales (`TechLabel`, `BlueprintGrid`, clases `.btn-kronos-*` / `.kronos-meta*` / `.kronos-blueprint`) y `CTASection.astro` como referencia de overlays, headlines y animaciones. Prohíbe improvisar estética nueva.
+Skill constrainer, no creativo. Replica el sistema ya definido: el kit del estándar de kronos-web
+(`src/styles/ESTANDAR.md`, `src/styles/estandar.css`, `PageHero.astro`, `CTASection.astro`,
+`PageTransition.astro`), los componentes y clases globales (`TechLabel`, `BlueprintGrid`, `.btn-kronos-*`) y los
+7 patrones de movimiento de `design/animations.md`. Prohíbe improvisar estética o movimiento nuevos.
 
 ## Cuándo usar
 
 - `rediseña la página X`
-- `aplica el estilo de CTASection a X`
+- `aplica el estilo del home a X`
 - `haz X consistente con el diseño del home`
 - `modernizar la sección Y`
 - `alinea este componente al sistema`
 
-**NO disparar si:** el usuario pide crear algo nuevo con estética distinta (usar `frontend-design`) o es una corrección de bug visual puntual (padding, typo).
+**NO disparar si:** el usuario pide crear algo nuevo con estética distinta (usar `frontend-design`) o es una
+corrección de bug visual puntual (padding, typo).
 
 ## Lectura obligatoria
 
-**Siempre (3):** `DESIGN.md`, `src/components/CTASection.astro`, archivo target.
+**Siempre (4):**
+1. `src/styles/ESTANDAR.md`: las reglas, con su sección "Piezas" y "Movimiento".
+2. `DESIGN.md`.
+3. `src/styles/estandar.css`: las clases `k-*` y las fichas.
+4. El archivo target.
 
-**Componentes y clases globales (conocer antes de implementar):**
-- `<TechLabel>` (`src/components/TechLabel.astro`) — label técnica `◆ LABEL ─── coord`. Props: `label`, `coord?`.
-- `<BlueprintGrid>` (`src/components/BlueprintGrid.astro`) — grid decorativo. Props: `class?`.
-- `<ServiceSubNav>` (`src/components/ServiceSubNav.astro`) — sub-nav sticky para secciones/categorías. Props: `items`, `navId`, `sectionClass`, `ariaLabel?`. Usar como referencia visual cuando la página tiene navegación por categorías o secciones.
-- `.btn-kronos-primary` / `.btn-kronos-outline` — botones con shimmer + liquid fill (global en `src/styles/global.css`).
-- `.kronos-meta*` — label técnica CSS (consumida por TechLabel, global en `global.css`).
-- `.kronos-blueprint` — blueprint grid CSS (consumida por BlueprintGrid, global en `global.css`).
+**Piezas que se reutilizan (conocer antes de implementar):**
+- `<PageHero>`: abre toda página interior (ruta → etiqueta → `k-h1` → `k-lede`).
+- `k-sec` + `k-head`: cada sección (línea fina → etiqueta → `k-h2` → `k-lede` → `k-link`).
+- `<CTASection>`: cierra toda página.
+- `<TechLabel>`: etiqueta `◆ LABEL`, solo con datos reales, sin coordenadas de adorno.
+- `k-spec` / `k-mono`: datos y especificaciones en mono; las cifras nunca cuentan solas.
+- `k-shade`: velo bajo el rótulo de una foto.
+- `.btn-kronos-primary` / `.btn-kronos-outline`: botones globales.
 
-**Página hermana de referencia (obligatorio para páginas completas).** Antes de rediseñar una página, buscar en `src/pages/` una página interna ya alineada al sistema (grep por `TechLabel`, `BlueprintGrid`, `ServiceSubNav`). Leer completa la más similar al target para extraer el patrón de estructura (hero full-screen, capas, sub-nav, secciones). Si ninguna existe, usar solo `CTASection.astro` como referente.
+**Página hermana de referencia.** Antes de rediseñar una página, leer completa la página ya alineada más
+parecida: el home y `/contacto` son las más completas. Si ninguna se parece, usar solo el kit.
 
 **Bajo demanda, según el caso:**
-- Dudas de color → `design/tokens.md`
-- Dudas sobre qué está prohibido → `design/anti-patterns.md`
-- El componente necesita animación → `design/animations.md`
-- Dudas tipográficas → `design/typography.md`
-- Dudas sobre qué reutilizar → `design/components.md`
-- El caso no está resuelto por el canónico → `design/references.md` (Anduril, Saronic, Mach)
+- Dudas de color o grises → `design/tokens.md`.
+- Qué está prohibido → `design/anti-patterns.md`.
+- Movimiento → `design/animations.md` (7 patrones, fichas `--k-dur-*` / `--k-ease-*`).
+- Tipografía → `design/typography.md`.
+- Qué reutilizar → `design/components.md`.
+- El caso no está resuelto por el kit → `design/references.md` (Anduril, Saronic, Mach, Hadrian).
 
 ## Flujo (3 pasos)
 
-**1. Diagnóstico.** Lee los 3 obligatorios + el target + la página hermana de referencia (si el target es una página completa). Lista qué cumple ya el sistema, qué viola `anti-patterns.md`, qué componentes/clases globales puedes reutilizar (consulta `design/components.md §2` para componentes ALINEADOS relevantes). Elige una label contextual apropiada para la sección (ej. `CONTACTO`, `SERVICIOS`).
+**1. Diagnóstico.** Lee los 4 obligatorios, el target y la página hermana. Lista:
+- qué cumple ya el estándar;
+- qué viola `anti-patterns.md`;
+- qué piezas del kit puedes reutilizar.
 
-**2. Propuesta (condicional).** Si el cambio abarca más de una sección o introduce un patrón nuevo, escribe al usuario un plan breve (≤150 palabras: diagnóstico, estructura, copy propuesto, animaciones, ≤2 preguntas bloqueantes) y espera confirmación. Si el cambio es puntual con patrón existente, implementa directo.
+Elige una etiqueta contextual para cada sección.
 
-**3. Implementar + auditar.** Usa los componentes globales (`<TechLabel>`, `<BlueprintGrid>`) y clases globales (`.btn-kronos-*`) — no dupliques su CSS. Para overlays, headlines y animaciones, copia patrones desde `CTASection.astro`. Los 4 patrones canónicos de animación viven en `design/animations.md`; los valores numéricos exactos se copian del canónico, nunca se tipean de memoria. Todo color desde `@theme`. Ejecuta la checklist. Corre `npm run build`. Reporta.
+**2. Propuesta (condicional).** Si el cambio abarca más de una sección o introduce un patrón nuevo, escribe al
+usuario un plan breve y espera confirmación: ≤150 palabras con diagnóstico, estructura, copy propuesto,
+movimiento y ≤2 preguntas bloqueantes. Si el cambio es puntual y usa un patrón existente, implementa directo.
+
+**3. Implementar + auditar.** Arma con las piezas del kit; no dupliques su CSS. El movimiento sale solo de los
+7 patrones con sus fichas. Todo color sale de `@theme` o de las fichas de grises. Ejecuta la checklist, corre
+`npm test` (`estandar-sitio`, `movimiento`, `design-system-al-dia`) y `npm run build`, y reporta.
 
 ## Checklist de auditoría (pre-entrega)
 
-1. Cero hex hardcodeados — todos los colores desde `@theme` (excepción blancos primitivos documentados).
+1. Cero hex hardcodeados; colores desde `@theme`; grises de texto solo 1 / 0,78 / 0,62 / 0,55.
 2. Una sola sans (Instrument Sans) + una sola mono (Geist Mono).
-3. Naranjo `var(--color-accent)` en ≤5% del área: máx 1 botón accent por sección, máx 3 palabras accent por headline, cero `bg-accent` como fondo principal.
-4. Headlines de hero/CTA en uppercase con `letter-spacing: -0.02em`.
-5. Animaciones con fallback `prefers-reduced-motion` y mobile degradation.
-6. `:focus-visible` con outline visible en todo elemento interactivo.
-7. Si vive en `src/pages/index.astro`, tiene clase `snap-section`.
-8. Copy 100% español. Sin emojis decorativos. Sin `<Button>` legacy (usar `.btn-kronos-*` globales). Sin `data-reveal` + GSAP SplitText simultáneos.
-9. Labels técnicas via `<TechLabel>`, no copiando `.kronos-meta*` CSS manualmente. Blueprint grids via `<BlueprintGrid>`.
-10. Cero duplicación de CSS de botones/meta/grid — esos estilos son globales en `global.css`.
+3. Naranjo en ≤5% del área. Solo en el ◆, el botón principal (uno por sección), las cotas y el riel de calidad;
+   nunca dentro de un titular.
+4. Titulares tipo oración y livianos (`k-h1`, `k-h2`, `k-h3`). Nunca en mayúsculas, nunca cortados con guion.
+5. Apertura igual en cada sección: etiqueta mono → titular → bajada de hasta 640 px.
+6. Movimiento:
+   - solo los 7 patrones, con las fichas;
+   - nada tarjeta por tarjeta, nada en bucle sin pausa;
+   - todo `:hover` dentro de `@media (hover: hover)`;
+   - con `prefers-reduced-motion`, todo quieto y visible.
+7. `:focus-visible` con outline visible en todo elemento interactivo; objetivos táctiles de 44 px.
+8. Si vive en `src/pages/index.astro`, tiene clase `snap-section`. Ninguna pieza compartida la lleva.
+9. Copy 100% español. Sin emojis decorativos. Sin `<Button>` legacy.
+10. Solo fotos reales de Kronos, con su rótulo sobre la imagen; esquinas rectas.
 
 ## PROHIBITED
 
-- Inventar tokens, hex, fonts o escalas fuera de `@theme` y `DESIGN.md`.
-- Duplicar CSS de `.btn-kronos-*`, `.kronos-meta*` o `.kronos-blueprint` en scoped styles — esos son globales.
-- Re-implementar patrones de animación desde cero en lugar de copiar de `CTASection.astro` + `design/animations.md`.
+- Inventar tokens, hex, fonts, escalas, duraciones o curvas fuera de `@theme`, de las fichas y de `DESIGN.md`.
+- Duplicar CSS de `.btn-kronos-*`, `.kronos-meta*`, `.kronos-blueprint` o de las clases `k-*`.
+- Animar fuera de los 7 patrones de `design/animations.md`.
 - Tocar copy de negocio (textos, datos, imágenes del cliente).
 - Añadir dependencias npm sin aprobación del usuario.
 
 ## Edge cases
 
-- **Target = `CTASection.astro`.** Es el canónico; no se rediseña desde el skill. Requiere consulta explícita del usuario y actualización de los docs (`DESIGN.md`, `design/*.md`) en el mismo commit.
-- **Conflicto código canónico vs doc.** Gana el código ejecutándose. Abrir tarea para sincronizar el doc desactualizado.
+- **Target = una pieza del kit** (`PageHero`, `CTASection`, `PageTransition`, `estandar.css`). Cambiarla cambia
+  todo el sitio. Requiere consulta explícita del usuario y actualizar `ESTANDAR.md` y los docs del design
+  system en el mismo cambio.
+- **Conflicto entre código y doc.** Gana el estándar con sus tests. Abrir tarea para sincronizar el doc
+  desactualizado.
 - **Archivo del design system ausente.** Detener y avisar al usuario. No improvisar lo que falta.
 
 ## Lo que NO hace este skill
 
 - Crear estéticas nuevas desde cero (usar `frontend-design`).
-- Redefinir el sistema (editar `DESIGN.md` es proceso separado y explícito).
-- Escribir copy de negocio (textos del cliente los define el usuario).
+- Redefinir el sistema: editar `DESIGN.md` o `ESTANDAR.md` es un proceso separado y explícito.
+- Escribir copy de negocio: los textos del cliente los define el usuario.
 
 ## Señal de éxito
 
-1. La página rediseñada usa el mismo vocabulario visual que `CTASection.astro` (`<TechLabel>`, uppercase headlines, paleta, `.btn-kronos-*`, `<BlueprintGrid>`) — no es indistinguible, comparte lenguaje.
-2. `npm run build` pasa sin warnings; grep de hex en el archivo target devuelve solo excepciones documentadas.
-3. Diff del commit toca el target + opcionalmente `design/components.md` si se registró un componente nuevo. Cero dependencias npm nuevas. Cero CSS duplicado de estilos globales.
+1. La página rediseñada se ve del mismo juego de planos que el home: misma apertura, mismas líneas, mismos
+   datos en mono, mismo movimiento.
+2. `npm test` y `npm run build` pasan; el grep de hex en el target devuelve solo excepciones documentadas.
+3. El diff toca el target y, si se registró un componente nuevo, `design/components.md`. Cero dependencias npm
+   nuevas y cero CSS duplicado de estilos globales.

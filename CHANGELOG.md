@@ -8,6 +8,36 @@ Sistema de versionado: semver (`MAJOR.MINOR.PATCH`).
 
 ---
 
+## [0.2.0] — 2026-11-20
+
+El estándar de noviembre de kronos-web pasa al design system (Linear 5IN-824, padre 5IN-823). Desde esta
+versión el design system y `src/styles/ESTANDAR.md` piden lo mismo, y `tests/design-system-al-dia.test.mjs`
+de kronos-web lo vigila.
+
+### Cambiado
+- **Titulares tipo oración, livianos (peso 300) y sin naranjo dentro.** Reemplaza la regla de titulares en
+  mayúsculas con palabra naranja: medidas el 13-nov-2026, ninguna de las referencias (Anduril, Saronic, Mach,
+  Hadrian) usa titulares de sección en mayúsculas. `typography.md`, `anti-patterns.md`, `tokens.md` y
+  `DESIGN.md`.
+- **Movimiento:** 7 patrones con nombre y fichas de duración (150/250/400/700 ms) y curva (taller, entrada,
+  salida), tomadas de Material 3 y Carbon. `design/animations.md` se reescribe.
+- **Grises:** 4 de texto (1 / 0,78 / 0,62 / 0,55, ninguno bajo 0,55) y 2 de línea (0,14 / 0,4).
+- **Esquinas rectas en todo**, también en las tarjetas.
+- **La referencia Astro** (`reference/astro/CTASection.astro`) pasa a ser el cierre del estándar.
+- **La skill `/rediseño`** trabaja con el kit del estándar.
+
+### Retirado (queda escrito en las secciones "Retirados" de cada documento)
+- Fondo WebGL animado (shader mesh gradient), revelado de titulares con GSAP SplitText, brillo pulsante y
+  destello en botones, contadores animados, tarjetas con giro 3D y aparición tarjeta por tarjeta.
+- Componentes marcados DEPRECADO: TechnicalCatalog, LogoCarousel, Button.
+
+### Para las apps (zeus-v2, km-cotizador)
+- No se cambió ningún token de color ni se borró ninguno. Las fichas `--k-*` son nuevas y viven en
+  kronos-web. zeus-v2 mantiene su propia copia de reglas en `.agents/skills/kronos-mining-design/`, que no
+  cambia sola: si una app vuelve a tocar su UI, debería tomar la regla de titulares tipo oración.
+
+---
+
 ## [Unreleased]
 
 ### Pendientes de baja prioridad (deuda técnica conocida)
@@ -22,7 +52,7 @@ Ninguno bloquea el uso del sistema en producción. Atacar cuando haya fricción 
 **Componentes pendientes:**
 - Crear `reference/react/CTASection.tsx` (o mejor: `reference/react/DashboardSection.tsx`) para stack React. El canónico actual (Astro) es de marketing/hero; las apps Kronos necesitan un canónico orientado a dashboards de trabajo. Nace del proyecto `lector-planos`.
 - Crear canónico de card (`reference/astro/Card.astro` o equivalente) para componentes de contenido editorial. El sistema hoy solo tiene la sección hero.
-- Migrar los 19 componentes legacy de `kronos-web` al lenguaje del sistema (Button, Header, Footer, ServiceCard, ProjectCard, ArticleCard, LogoCarousel, FeaturedProjectsCarousel, StatsBar, TechnicalCatalog, etc.). Trabajo iterativo, caso a caso.
+- Migrar los componentes legacy de `kronos-web` al kit del estándar: en curso en Linear (5IN-825 a 5IN-830).
 
 **Referencias visuales:**
 - Archivar screenshots de Anduril, Saronic y Mach en `design/references/*.png` antes de que rediseñen y pierdas el benchmark. Formato: `[empresa]-home-[YYYY-MM].png`.

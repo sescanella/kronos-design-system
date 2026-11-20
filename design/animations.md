@@ -1,238 +1,175 @@
-# Patrones de animación — Kronos Mining
+# Movimiento — Kronos Mining
 
-> El sistema Kronos tiene **4 patrones firmados** de animación. Cualquier animación en el
-> sitio debe usar uno de estos o justificar por qué no. Las animaciones decorativas sin
-> propósito están prohibidas por `design/anti-patterns.md` §Animación.
+> Desde el 20-nov-2026 el sistema tiene **7 patrones de movimiento con nombre** y **fichas** de duración y
+> curva. Toda animación usa uno de esos patrones con sus fichas, o no va. Estos patrones reemplazan a los 4
+> "patrones firmados" de abril (ver **Retirados** al final).
 >
-> **Fuente de verdad de todos los parámetros numéricos:** `src/components/CTASection.astro`.
-> Este archivo documenta los patrones y cómo copiarlos, no duplica los parámetros exactos.
-> Cuando necesites los valores precisos, copia directamente del canónico.
-
-## Stack instalado
-
-Verifica en `package.json` que estas dependencias están presentes antes de usar los patrones que dependen de JS:
-
-- `@paper-design/shaders` (`^0.0.72`) — Patrón A (shader mesh gradient WebGL)
-- `gsap` (`^3.14.2`, incluye `SplitText` y `ScrollTrigger` gratis desde septiembre 2024 post-Webflow) — Patrón B
-- Patrones C y D son CSS puro, sin dependencias
-
-**Nunca añadir una nueva dependencia de animación sin aprobación del usuario.** Prohibido traer `framer-motion`, `motion-one`, `anime.js`, `lottie`, `three.js` (para animación de UI), `locomotive-scroll`.
+> **De dónde salen los valores.** Las duraciones y curvas vienen de Material 3 (`md-sys-motion`, repo
+> material-web) y de Carbon (`@carbon/motion`), leídos en su fuente el 20-nov-2026. El cambio de página
+> conserva los tiempos que Sebastián aprobó el 13-nov-2026. Las fichas viven en el CSS del sitio
+> (`src/styles/estandar.css` de kronos-web) y este documento las cita tal cual:
+> `tests/design-system-al-dia.test.mjs` compara las dos copias.
+>
+> **El concepto.** El sitio se lee como un plano de taller: las líneas se trazan y el contenido se asienta.
+> Nada rebota, nada brilla, nada se repite en bucle sin razón.
 
 ---
 
-## Los 4 patrones firmados
+## Fichas
 
-### Patrón A — Shader mesh gradient WebGL (Paper Shaders)
+| Ficha | Para qué | Fuente |
+|---|---|---|
+| `--k-dur-1: 150ms` | Responder: mouse encima, foco, cambio de color | M3 `short3` · Carbon `moderate-01` |
+| `--k-dur-2: 250ms` | Controles: menú, acordeón, filtros | M3 `medium1` · Carbon `moderate-02` (240) |
+| `--k-dur-3: 400ms` | Aparición de un bloque | M3 `medium4` · Carbon `slow-01` |
+| `--k-dur-4: 700ms` | La entrada de la primera pantalla y el trazo de líneas, una vez por página | Carbon `slow-02` · M3 `extra-long1` |
+| `--k-ease-taller: cubic-bezier(0.5, 0, 0, 1)` | Lo que va de un reposo a otro: la tarjeta del cambio de página, el menú, un acordeón, la foto de una tarjeta | La curva del cambio de página (13-nov-2026) |
+| `--k-ease-entrada: cubic-bezier(0.05, 0.7, 0.1, 1)` | Lo que aparece y las líneas que se trazan | M3 `emphasized-decelerate` |
+| `--k-ease-salida: cubic-bezier(0.3, 0, 1, 1)` | Lo que se va para siempre, con una ficha de duración menos que su entrada | M3 `standard-accelerate` |
 
-**Qué hace.** Fondo animado con WebGL que mezcla 4 colores en un mesh gradient suave. En Kronos se usa con la paleta `#052650 / #083A75 / #0A4C95 / #FF5B00` para generar un ambiente "tech premium" sin recurrir a imágenes o videos estáticos.
-
-**Cuándo usar.**
-- Secciones hero de alto impacto.
-- Secciones CTA al final de una página con peso estratégico.
-- Fondos de landing pages de campaña.
-
-**Cuándo NO usar.**
-- Secciones de contenido de lectura larga (blog, artículo detalle).
-- Secciones del home que ya tienen otro elemento visual dominante (logo carrusel, globe 3D, video).
-- Páginas con performance crítico (pricing, checkout si existiera).
-- Mobile (`< 768px`) — se desactiva automáticamente por batería y performance.
-
-**Reglas de activación/desactivación (obligatorias).**
-- Desactivado si `window.innerWidth < 768`.
-- Desactivado si `window.matchMedia('(prefers-reduced-motion: reduce)').matches`.
-- Montaje lazy con `IntersectionObserver` (`threshold: 0.1`, `rootMargin: '200px 0px'`) — no se inicializa hasta que la sección está a 200px de entrar al viewport.
-- Cleanup en `astro:before-swap` (importante para View Transitions futuras).
-- Fallback sólido: la sección debe tener `bg-primary-dark` (o `background: var(--color-primary-dark)` en el layer del shader) como clase base para que el color exista antes de que el canvas monte.
-
-**Anatomía de capas necesaria.**
-Cualquier sección que use Patrón A debe tener 4 layers con z-index estandarizado (ver `tokens.md §6`):
-
-1. Canvas del shader (`z-index: 0`) — `<div class="cta-shader-layer" data-cta-shader aria-hidden="true"></div>`
-2. Overlay gradient (`z-index: 10`) — radial + lineal para garantizar contraste del texto.
-3. Grid blueprint decorativo (`z-index: 10`) — opcional, refuerza el mood técnico.
-4. Contenido (`z-index: 20`) — el texto y botones.
-
-**Snippet de referencia.**
-Copiar desde `src/components/CTASection.astro`:
-- HTML: Layer 1 (`cta-shader-layer`), Layer 2 (`cta-overlay`), Layer 4 (`cta-content`).
-- Layer 3: usar `<BlueprintGrid class="z-10" />` (componente global, no copiar CSS).
-- CSS scoped: `.cta-shader-layer`, `.cta-shader-layer :global(canvas)`, `.cta-overlay`.
-- Script: la función `initCTAShader()` completa, `destroyCTAShader()`, y los listeners `astro:page-load` / `astro:before-swap`.
-
-**Uniforms del shader (referencia, valores exactos en el canónico).**
-- `u_colors`: array de 4 colores de la paleta convertidos con `getShaderColorFromString`.
-- `u_colorsCount`: 4.
-- `u_distortion`, `u_swirl`, `u_grainMixer`, `u_grainOverlay`: ver valores exactos en `CTASection.astro`. Si el shader se siente muy intenso, bajar `u_distortion` y `u_swirl`.
-- Speed: último argumento posicional de `new ShaderMount(...)`, muy bajo (respiración, no movimiento). Ver canónico.
-
-**Error handling.**
-El script envuelve `new ShaderMount(...)` en `try/catch`. Si WebGL falla (Safari viejo, context limit alcanzado), se cae al fallback sólido y se loguea warning con `console.warn('[CTASection] Shader init failed, using fallback:', err)`. Nunca bloquea el render del resto de la sección.
+La duración crece con la distancia o con el tamaño de lo que se mueve; M3 y Carbon dicen lo mismo. Fuera de
+estas fichas solo quedan los tiempos del cambio de página (patrón 1) y de la línea de carga (patrón 7), que
+son piezas únicas.
 
 ---
 
-### Patrón B — GSAP SplitText + ScrollTrigger (text reveal)
+## Los 7 patrones
 
-**Qué hace.** Revela headlines línea por línea cuando la sección entra en viewport, con efecto `yPercent + blur + opacity` y stagger. El sub y los botones caen después con un fade + y-offset delayed.
+### 1. Cambio de página
 
-**Cuándo usar.**
-- Headlines de secciones hero/CTA donde el texto es protagonista.
-- Secciones con "momento wow" de entrada.
-- Máximo 2-3 por página para preservar el impacto.
+La barra queda fija y lo que se mueve es la página, debajo de ella:
+- la página se encoge hasta ser una tarjeta (420 ms);
+- sale de lado mientras entra la nueva (700 ms);
+- la nueva crece a pantalla completa (450 ms).
 
-**Cuándo NO usar.**
-- Navigation (Header, menu items) — no hay "entrada" aquí.
-- Body copy de lectura larga.
-- Componentes que ya tienen `data-reveal` (conflicto, ver `anti-patterns.md §Animación → data-reveal + GSAP SplitText simultáneos`).
+Todo usa `--k-ease-taller`. Si la página ya estaba precargada, los tiempos son 300/550/350 ms; en el
+celular, ×0,7. La página nueva llega en su estado final: no repite su entrada. Implementación:
+`src/components/PageTransition.astro` (kronos-web). Regla completa: `ESTANDAR.md` 14b.
 
-**Reglas de activación/desactivación.**
-- Fallback en `prefers-reduced-motion`: usar `gsap.set` directo al estado final (`opacity: 1`, `y: 0`, `filter: 'none'`). No intentar animar.
-- `ScrollTrigger.create` con `once: true` para no re-disparar al volver a la sección.
-- `start: 'top 75%'` — dispara cuando la sección está 75% dentro del viewport.
-- Cleanup en `astro:before-swap`: `splitInstance.revert()` + recorrer `ScrollTrigger.getAll()` y matar los triggers cuyo `.trigger` pertenezca a esta sección (filtro por `closest('[aria-label="Contacto"]')` o por el attr que identifique la sección canónica).
-- Re-init en `astro:page-load`.
+**Movimiento reducido:** fundido de 180 ms.
 
-**Parámetros relevantes (ver valores exactos en el canónico).**
-- `SplitText` con `type: 'lines'`, `linesClass: 'cta-split-line'` (la clase interna para wrap de líneas con `overflow: hidden`).
-- `gsap.set` inicial sobre líneas: `yPercent: 110, opacity: 0, filter: 'blur(10px)'`.
-- `gsap.to` en `onEnter`: `duration`, `stagger`, `ease` (`power3.out`) — ver canónico.
-- `sub` y `actions` con `delay` adicional respecto al headline.
+### 2. Entrada de la primera pantalla
 
-**Importante — clase global para SplitText.** `SplitText` genera los `<div class="cta-split-line">` en runtime, por lo que el CSS scoped de Astro no los alcanza. En el canónico la clase está declarada con selector `:global(.cta-split-line)` dentro del bloque `<style>` scoped. Cualquier sección que use Patrón B debe replicar ese patrón o mover la declaración a CSS global.
+La etiqueta, el título y la bajada de la apertura suben 24 px con fundido, escalonados cada 80 ms
+(`--k-dur-4`, `--k-ease-entrada`). Ocurre una sola vez y solo con CSS, al cargar la página directo. La foto
+principal no se esconde nunca, porque es la que mide la velocidad de carga. Si la página llega por cambio de
+página, ya está quieta.
 
-**Snippet de referencia.**
-Copiar desde `CTASection.astro`:
-- Imports: `import { gsap } from 'gsap'`, `import { SplitText } from 'gsap/SplitText'`, `import { ScrollTrigger } from 'gsap/ScrollTrigger'`, `gsap.registerPlugin(SplitText, ScrollTrigger)`.
-- La función `initCTAAnimations()` completa.
-- La función `cleanupAll()` y los listeners `astro:page-load` / `astro:before-swap`.
+**Movimiento reducido:** quieto y visible.
 
----
+### 3. Aparición de sección
 
-### Patrón C — Botón primario con shimmer sweep + glow pulse (CSS puro)
+Cuando una sección (`k-sec`) entra en pantalla:
 
-**Qué hace.** Botón con fondo accent que:
-- En reposo: respira con un glow pulse infinito (`@keyframes cta-glow-pulse`, `3.5s ease-in-out infinite`, `box-shadow` pulsante en `rgba(255, 91, 0, 0.28)`).
-- En hover: un destello diagonal atraviesa el botón (`::before` con `linear-gradient 115deg` + `translateX` de `-120%` a `120%`), se eleva `-2px` en `translateY`, y la flecha interna se desliza `4px` a la derecha.
+1. Su línea fina superior se traza de izquierda a derecha (`--k-dur-4`, `--k-ease-entrada`).
+2. La apertura (etiqueta → titular → bajada) sube como en el patrón 2 (`--k-dur-3`).
+3. El contenido aparece **como un bloque**, solo con opacidad (`--k-dur-3`, 120 ms después).
 
-**Cuándo usar.**
-- CTA primario de secciones hero/CTA (máximo 1 por sección).
-- Botones de alta importancia donde la atención debe ser inevitable.
+Pasa una sola vez y **nunca tarjeta por tarjeta**. Lo que ya está en pantalla al cargar, o al llegar por un
+enlace a una sección, se muestra quieto.
 
-**Cuándo NO usar.**
-- Botones secundarios (usar Patrón D).
-- Links de navegación.
-- Botones dentro de cards o componentes densos (el glow distrae).
-- Nunca como único tipo de botón de una página (satura el patrón).
+**Movimiento reducido:** quieto y visible.
 
-**Reglas de activación/desactivación.**
-- `@media (prefers-reduced-motion: reduce)`: `animation: none !important`, `transition: none !important` para `.btn-kronos-primary`, `.btn-kronos-primary::before`, `.btn-kronos-primary__arrow` (y también afecta `.btn-kronos-outline__fill`, ver bloque unificado en el canónico).
-- `:focus-visible` con `outline: 2px solid #ffffff`, `outline-offset: 3px` (crítico para accesibilidad).
-- En mobile, el shimmer sweep sigue funcionando en tap (`:active` hereda `:hover` en móviles modernos). Se mantiene activo.
+### 4. Trazo (la firma)
 
-**Snippet de referencia.**
-Todas las clases `.btn-kronos-*` son **globales** (definidas en `src/styles/global.css`). No copiar CSS — solo usar las clases en HTML. Incluye `@keyframes kronos-glow-pulse` y reduced-motion fallbacks. Mobile full-width automático `< 768px`.
+Las líneas del dibujo se trazan una vez al verse, con `--k-dur-4` y `--k-ease-entrada`:
+- las cotas, que solo van donde miden algo real;
+- las líneas guía de los rótulos sobre fotos;
+- el plano de cómo llegar a la planta;
+- el riel de calidad.
 
-**HTML mínimo:**
-```html
-<a href="..." class="btn-kronos-primary">
-  <span class="btn-kronos-primary__label">TEXTO CTA</span>
-  <span class="btn-kronos-primary__arrow" aria-hidden="true">→</span>
-</a>
-```
+Se anima con `stroke-dashoffset` o `transform: scaleX`.
 
----
+**Movimiento reducido:** dibujado desde el principio.
 
-### Patrón D — Botón outline con liquid fill clip-path (CSS puro)
+### 5. Respuesta
 
-**Qué hace.** Botón outline fino (`border: 1px solid rgba(255,255,255,0.4)`) que al hover se llena con un óvalo blanco que sube desde abajo (`clip-path: ellipse(120% 0% at 50% 100%)` → `ellipse(140% 160% at 50% 100%)`), invirtiendo el color del texto a azul Kronos `#083A75`.
+Al poner el mouse o el dedo encima, en `--k-dur-1`:
+- la flecha de un enlace avanza 4 px;
+- el botón principal oscurece su naranjo;
+- el contorno se llena desde abajo;
+- la foto de una tarjeta se acerca apenas (escala 1,03, `--k-dur-3`, `--k-ease-taller`) y su título se
+  subraya.
 
-**Cuándo usar.**
-- CTA secundario pareado con Patrón C.
-- Cualquier acción secundaria importante pero no primaria.
-- Puede repetirse más que el primario (2-3 por sección no es exagerado).
+Todo `:hover` va dentro de `@media (hover: hover)`, para que en el celular no quede pegado.
 
-**Cuándo NO usar.**
-- Solo sobre fondos oscuros. Sobre fondos claros no tiene suficiente contraste.
-- Sin un Patrón C cerca (queda huérfano estéticamente).
+**Movimiento reducido:** solo cambia el color.
 
-**Reglas de activación/desactivación.**
-- `@media (prefers-reduced-motion: reduce)`: `transition: none !important` para `.btn-kronos-outline__fill` (cubierto en el mismo bloque reduced-motion del canónico).
-- `:focus-visible` con `outline: 2px solid #FF5B00`, `outline-offset: 3px`.
-- Transición del `clip-path` con `cubic-bezier(0.25, 0.46, 0.45, 0.94)` que da la sensación de líquido.
+### 6. Medios en bucle
 
-**Snippet de referencia.**
-Todas las clases `.btn-kronos-outline*` son **globales** (definidas en `src/styles/global.css`). No copiar CSS — solo usar las clases en HTML. Reduced-motion fallback incluido.
+Un video corre solo mientras se ve y lleva un botón de pausa chico en mono. Lo exige WCAG 2.2.2 (nivel A)
+para todo lo que se mueve solo más de 5 s junto a otro contenido. Solo se usa material real: de 4 a 8 s, sin
+audio y de menos de 1 MB. El dibujo del spool del home dura 4,2 s y se detiene, así que no necesita pausa.
 
-**HTML mínimo:**
-```html
-<a href="..." class="btn-kronos-outline">
-  <span class="btn-kronos-outline__fill" aria-hidden="true"></span>
-  <span class="btn-kronos-outline__label">TEXTO SECUNDARIO</span>
-</a>
-```
+**Movimiento reducido o ahorro de datos:** el póster, quieto.
+
+### 7. Carga
+
+Si la página nueva tarda, avanza una línea de 1 px bajo la barra (`PageTransition`). No hay otra vista de
+carga ni otro movimiento.
+
+**Movimiento reducido:** igual, porque es la única señal de que algo está pasando.
 
 ---
 
-## Ciclo de vida en Astro (obligatorio para Patrones A y B)
+## Coreografía
 
-Todo script de animación que toque el DOM debe seguir este patrón para ser compatible con View Transitions futuras de Astro. Los nombres de funciones son los reales del canónico:
+El orden de entrada viene de Carbon:
+1. la barra (que no se mueve);
+2. la apertura: etiqueta → título → bajada;
+3. el contenido;
+4. la acción principal;
+5. los dibujos.
 
-```javascript
-// Variables de instancia en el scope del <script>
-let shaderInstance: any = null;
-let splitInstance: any = null;
-
-function initCTAShader()    { /* Patrón A: IntersectionObserver + new ShaderMount(...) */ }
-function destroyCTAShader() { /* shaderInstance.dispose(); shaderInstance = null; */ }
-function initCTAAnimations(){ /* Patrón B: SplitText + ScrollTrigger.create */ }
-
-function initAll() {
-  initCTAShader();
-  initCTAAnimations();
-}
-
-function cleanupAll() {
-  destroyCTAShader();
-  if (splitInstance?.revert) { splitInstance.revert(); splitInstance = null; }
-  ScrollTrigger.getAll().forEach((t) => {
-    if (t.trigger && (t.trigger as HTMLElement).closest('[aria-label="Contacto"]')) {
-      t.kill();
-    }
-  });
-}
-
-// Primer load
-initAll();
-// Astro View Transitions lifecycle
-document.addEventListener('astro:page-load', initAll);
-document.addEventListener('astro:before-swap', cleanupAll);
-```
-
-**Razón.** Hoy Astro Kronos no usa `<ClientRouter />`, pero los listeners son defensivos. Si en el futuro se activa View Transitions, los scripts no se duplicarán ni generarán memory leaks. El filtro por `closest('[aria-label="Contacto"]')` es el que garantiza que `cleanupAll` solo mate los triggers de la sección canónica — en secciones nuevas, cambiar ese selector al `aria-label` correspondiente.
+Hay como máximo 4 pasos escalonados, cada 80 ms. Lo que significa lo mismo se mueve igual en todo el sitio.
 
 ---
 
-## Reglas globales
+## Reglas
 
-1. **Reduced motion siempre.** Cualquier patrón debe tener su fallback a estado final.
-2. **Mobile degradation.** Shader WebGL off (`< 768px`). GSAP SplitText + CSS patterns (C, D) siguen activos en todos los breakpoints.
-3. **Una dependencia más requiere discusión.** No añadir `framer-motion`, `motion-one`, `anime.js`, `lottie` sin justificación.
-4. **Los parámetros numéricos viven en el canónico.** Si necesitas un valor exacto, cópialo de `CTASection.astro`. Si ajustas el canónico, el sistema entero se actualiza (por eso no se duplican aquí).
-5. **Nunca combinar `data-reveal` con Patrón B en el mismo elemento** (ver `anti-patterns.md §Animación`).
-6. **Cada animación comunica algo.** Si no puedes explicar en una frase qué comunica (entrada, jerarquía, feedback, estado), no va.
+1. **Una sola vez.** Nada vuelve a animarse al subir y bajar.
+2. **Solo se anima `transform`, `opacity`, `clip-path` y el trazo (`stroke-dashoffset`).** En una
+   respuesta también puede cambiar el color. Nunca se anima `width`, `height`, `top`, `left`, `margin`,
+   `box-shadow`, `filter` ni `backdrop-filter`, porque cuestan cuadros (web.dev, propiedades de compositor).
+3. **Movimiento reducido siempre.** Cada patrón tiene su versión quieta, descrita arriba. Con
+   `prefers-reduced-motion` solo se admite opacidad de hasta `--k-dur-1`.
+4. **Nada en bucle infinito**, salvo un video en pantalla con su pausa (patrón 6).
+5. **Nada se esconde para siempre.** Sin JavaScript, al imprimir o si el script falla, todo se ve. Solo se
+   esconde lo que está bajo la primera pantalla en el momento de arrancar.
+6. **Un solo módulo, que arranca una vez.** En kronos-web el patrón 3 vive en `src/scripts/movimiento.ts`
+   (5IN-825) y reemplaza a `ScrollReveal`. No guarda estado en `<html>`, porque Astro lo borra en cada cambio
+   de página, y se apaga en `astro:before-swap`.
+7. **Sin dependencias nuevas de animación.** Lo que el sistema necesita sale de CSS y de
+   `IntersectionObserver`. `animation-timeline: view()` funciona en iOS recién desde iOS 26: sirve como
+   mejora opcional, nunca como base.
+8. **Cada animación comunica algo:** entrada, jerarquía, respuesta o estado. Si no se puede decir en una frase
+   qué comunica, no va.
 
 ---
 
-## Cuándo proponer un quinto patrón
+## Retirados
 
-Solo si:
-1. Hay un caso concreto repetible que los 4 existentes no cubren.
-2. El patrón nuevo se puede implementar con las dependencias ya instaladas (sin añadir libs).
-3. El patrón es usable en al menos 3 componentes distintos.
-4. El usuario lo aprueba explícitamente.
+Estos patrones de abril de 2026 salieron el 20-nov-2026 (5IN-824). Quedan escritos para que nadie los vuelva
+a meter.
 
-Si pasa los 4 filtros: documentarlo como Patrón E aquí, implementarlo en un componente canónico (probablemente `CTASection.astro` si aplica, o un nuevo canónico si es un tipo de sección distinta), y referenciarlo desde `DESIGN.md §5`.
+- **Patrón A: fondo WebGL animado** (shader mesh gradient, `@paper-design/shaders`).
+  - Hacía que 53 de ~85 páginas abrieran distinto al resto.
+  - Corría en bucle sin pausarse fuera de pantalla.
+  - El plano de taller usa fotos reales y la grilla de dibujo.
+- **Patrón B: revelado de titulares línea a línea** (GSAP SplitText + ScrollTrigger, con desenfoque).
+  - Lo prohíbe la regla 14 del estándar: ninguna de las referencias medidas lo usa.
+  - Además, peleaba con `data-reveal`.
+- **Patrón C: botón principal con brillo pulsante infinito** (glow pulse) **y destello diagonal** (shimmer).
+  - Era un bucle decorativo en cada página, también en el botón de la barra.
+  - La respuesta del botón ahora es el patrón 5.
+- **Contadores animados de cifras** (stats inline del hero). Las cifras van en el texto o como especificación
+  mono, sin contar.
+- **Tarjetas que giran en 3D al mover el mouse y apariciones tarjeta por tarjeta.**
+- **Patrón D: relleno líquido del botón de contorno.** No se retira: pasa a ser parte del patrón 5, con las
+  fichas.
 
 ---
 
-**Última actualización:** 2026-04-04 (creación inicial)
-**Componente canónico de referencia:** `src/components/CTASection.astro`
+**Última actualización:** 2026-11-20 (5IN-824).
+**Dónde se aplica (kronos-web):** `src/styles/estandar.css`, `src/components/PageTransition.astro` y
+`src/scripts/movimiento.ts`.
