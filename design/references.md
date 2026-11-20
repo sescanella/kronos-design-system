@@ -23,12 +23,12 @@
 - **Por qué es canónica para Kronos:**
   Es el origen del lenguaje "defense-tech serious" que todo el resto del nicho copia. Define las reglas del
   sistema que Kronos adopta: fondo oscuro dominante, un único acento cromático usado con extrema
-  economía (<5% del área), tipografía oversized uppercase, labels técnicas como elemento de diseño y
+  economía (<5% del área), titulares grandes y livianos contra una etiqueta mono chica, labels técnicas como elemento de diseño y
   densidad visual deliberadamente baja. Cuando el sistema Kronos dude, Anduril es el juez final: si una
   decisión visual no se siente afín a `anduril.com`, está fuera del sistema.
 - **Qué buscar cuando la consultes:**
   - Restraint cromático extremo: fondo dominante + un solo acento usado en <5% del área visible.
-  - Tipografía display oversized en headlines, uppercase sin excepción, tracking ajustado.
+  - Titulares grandes y livianos, con tracking negativo; la mayúscula queda en las etiquetas mono (medido el 13-nov-2026: no hay titulares de sección en mayúsculas).
   - Labels técnicas (códigos de producto, nomenclatura de sistemas) tratadas como elementos de diseño, no como texto decorativo.
   - Navbar transparente al cargar, opacidad creciente al hacer scroll.
   - Video hero de instalación o producto real, nunca stock footage ni render genérico.
